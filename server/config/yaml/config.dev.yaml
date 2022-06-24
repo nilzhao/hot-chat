@@ -1,0 +1,22 @@
+# 开发环境
+system:
+  port: 18080
+  name: 抢红包系统
+
+db:
+  driverName: mysql
+  port: 3306
+  host: 127.0.0.1
+  database: envelope
+  user: root
+  password: 123456
+  # 连接池配置
+  connMaxLifetime: 12h
+  maxIdleConns: 1
+  maxOpenConns: 3
+  loggingEnabled: false
+  # 数据源参数配置
+  options:
+    charset: utf8
+    parseTime: true
+    loc: Local
