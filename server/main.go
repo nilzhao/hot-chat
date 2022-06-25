@@ -1,7 +1,7 @@
 package main
 
 import (
-	"server/initializer"
+	"red-server/initializer"
 )
 
 func main() {

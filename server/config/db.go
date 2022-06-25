@@ -1,7 +1,8 @@
+// 数据库配置
 package config
 
 import (
-	"server/utils"
+	"red-server/utils"
 	"strings"
 	"time"
 )

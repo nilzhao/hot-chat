@@ -4,7 +4,7 @@
 package initializer
 
 import (
-	starter "server/initializer/starter"
+	starter "red-server/initializer/starter"
 )
 
 type BootApplication struct {
@@ -27,7 +27,9 @@ func (b *BootApplication) Start() {
 
 func (b *BootApplication) register() {
 	starter.StarterRegister.Register(&starter.ConfigStarter{})
+	starter.StarterRegister.Register(&starter.LogStarter{})
 	starter.StarterRegister.Register(&starter.DBStarter{})
+	starter.StarterRegister.Register(&starter.GinStarter{})
 }
 
 func (b *BootApplication) init() {

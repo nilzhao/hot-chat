@@ -1,5 +1,6 @@
 # 开发环境
 system:
+  host: 127.0.0.1
   port: 18080
   name: 抢红包系统
 
@@ -20,3 +21,9 @@ db:
     charset: utf8
     parseTime: true
     loc: Local
+log:
+  dir: ./tmp/log/
+  name: red.log
+  level: debug
+  enableLineLog: true
+  localTime: true

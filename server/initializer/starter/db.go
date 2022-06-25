@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"server/global"
+	"red-server/global"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -19,6 +19,7 @@ type DBStarter struct {
 }
 
 func (s *DBStarter) Init() {
+	fmt.Println("初始化数据库...")
 	config := &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	}
@@ -40,6 +41,7 @@ func (s *DBStarter) Init() {
 	}
 
 	s.mysqlConfig = mysqlConfig
+	fmt.Println("初始化数据库成功")
 }
 
 func (s *DBStarter) Start() {

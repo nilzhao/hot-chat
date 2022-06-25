@@ -9,6 +9,7 @@ const (
 )
 
 type Config struct {
-	System SystemConfig `json:"system" yaml:"system,omitempty"`
-	DB     DBConfig     `json:"db" yaml:"db,omitempty"`
+	System SystemConfig `json:"system" yaml:"system"`
+	DB     DBConfig     `json:"db" yaml:"db"`
+	Log    LogConfig    `json:"log" yaml:"log"`
 }

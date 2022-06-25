@@ -1,6 +1,10 @@
 package utils
 
-import "reflect"
+import (
+	"errors"
+	"os"
+	"reflect"
+)
 
 func StructToMap(obj interface{}) map[string]interface{} {
 	obj1 := reflect.TypeOf(obj)
@@ -15,4 +19,18 @@ func StructToMap(obj interface{}) map[string]interface{} {
 		}
 	}
 	return data
+}
+
+func PathExists(path string) (bool, error) {
+	info, err := os.Stat(path)
+	if err == nil {
+		if info.IsDir() {
+			return true, nil
+		}
+		return false, errors.New("存在同名文件")
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }

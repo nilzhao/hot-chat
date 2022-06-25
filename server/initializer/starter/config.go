@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"server/config"
-	"server/global"
+	"red-server/config"
+	"red-server/global"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
@@ -19,8 +19,10 @@ type ConfigStarter struct {
 }
 
 func (s *ConfigStarter) Init() {
+	fmt.Println("初始化配置...")
 	configPath := getConfig()
 	parseConfig(configPath)
+	fmt.Println("初始化配置成功")
 }
 
 func getConfig() (configPath string) {
@@ -51,13 +53,14 @@ func getConfig() (configPath string) {
 
 func parseConfig(configPath string) {
 	v := viper.New()
-	fmt.Printf("配置文件地址 %s", filepath.Join("config/yaml", configPath))
+	fmt.Printf("配置文件地址 %s\n", filepath.Join("config/yaml", configPath))
 	v.SetConfigFile(filepath.Join("config/yaml", configPath))
 	v.SetConfigType("yaml")
 	err := v.ReadInConfig()
 	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		panic(fmt.Errorf("配置文件解析错误: %s", err))
 	}
+
 	v.WatchConfig()
 
 	v.OnConfigChange(func(e fsnotify.Event) {
