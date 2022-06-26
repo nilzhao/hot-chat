@@ -10,6 +10,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 type DBStarter struct {
@@ -22,6 +23,9 @@ func (s *DBStarter) Init() {
 	fmt.Println("初始化数据库...")
 	config := &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true, // use singular table name, table for `User` would be `user` with this option enabled
+		},
 	}
 	defaultLogger := logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
 		SlowThreshold:             200 * time.Millisecond,
@@ -54,4 +58,5 @@ func (s *DBStarter) Start() {
 		sqlDB.SetMaxOpenConns(global.CONFIG.DB.MaxOpenConns)
 		fmt.Println("数据库连接成功")
 	}
+	global.DB = db
 }
