@@ -1,4 +1,4 @@
-package utils
+package core
 
 import (
 	"net/http"
@@ -6,7 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Context struct {
+	*gin.Context
+}
+
 type ResponseCode int
+type HandlerFunc func(c *Context)
 
 const (
 	SuccessCode      ResponseCode = 0
@@ -16,7 +21,7 @@ const (
 	NotFoundCode     ResponseCode = 404
 )
 
-func ResOk(ctx *gin.Context, data any) {
+func (ctx *Context) ResOk(data any) {
 	ctx.JSON(http.StatusOK, map[string]any{
 		"code":    SuccessCode,
 		"data":    data,
@@ -36,7 +41,7 @@ type ResponseBody struct {
 	Message string
 }
 
-func ResFail(ctx *gin.Context, message string, infos ...ResponseFailInfo) {
+func (ctx *Context) ResFail(message string, infos ...ResponseFailInfo) {
 	info := ResponseFailInfo{}
 	if len(infos) != 0 {
 		info = infos[0]
@@ -51,4 +56,26 @@ func ResFail(ctx *gin.Context, message string, infos ...ResponseFailInfo) {
 		"message": message,
 		"errors":  info.Errors,
 	})
+}
+
+func (ctx *Context) ResNotFound(messages ...string) {
+	message := "您访问的资源不存在"
+	if len(messages) != 0 {
+		message = messages[0]
+	}
+	ctx.JSON(http.StatusOK, map[string]any{
+		"code":    NotFoundCode,
+		"data":    nil,
+		"message": message,
+		"errors":  nil,
+	})
+}
+
+func CreateHandlerFunc(h HandlerFunc) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx := &Context{
+			c,
+		}
+		h(ctx)
+	}
 }

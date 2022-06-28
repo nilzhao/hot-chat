@@ -2,8 +2,6 @@
 package config
 
 import (
-	"red-server/utils"
-	"strings"
 	"time"
 )
 
@@ -27,15 +25,6 @@ type DBConfigOptions struct {
 	Loc       string `json:"loc" yaml:"loc"`
 }
 
-func (config *DBConfig) getOptions() string {
-	arr := make([]string, 0)
-	optionMap := utils.StructToMap(config.Options)
-	for k, v := range optionMap {
-		arr = append(arr, k+string(v.(string)))
-	}
-	return strings.Join(arr, "&")
-}
-
 func (config *DBConfig) Dsn() string {
-	return config.User + ":" + config.Password + "@tcp(" + config.Host + ":" + config.Port + ")/" + config.Database + "?" + config.getOptions()
+	return config.User + ":" + config.Password + "@tcp(" + config.Host + ":" + config.Port + ")/" + config.Database + "?" + "parseTime=" + config.Options.ParseTime + "&charset=" + config.Options.Charset + "&loc=" + config.Options.Loc
 }

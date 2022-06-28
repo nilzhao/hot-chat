@@ -20,7 +20,6 @@ func (s *GinStarter) Init() {
 func (s *GinStarter) Setup() {
 	// 注册路由
 	api := s.engine.Group("/api/v1")
-	controller.NewHelloController().RegisterRoute(api)
 	controller.NewAccountController().RegisterRoute(api)
 }
 
