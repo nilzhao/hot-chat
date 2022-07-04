@@ -6,76 +6,65 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type ResCode int
+
+const (
+	CODE_SUCCESS      ResCode = 0
+	CODE_BAD_REQUEST  ResCode = 400
+	CODE_UNAUTHORIZED ResCode = 401
+	CODE_FORBIDDEN    ResCode = 403
+	CODE_NOT_FOUND    ResCode = 404
+)
+
 type Context struct {
 	*gin.Context
 }
 
-type ResponseCode int
+type ResponseBody struct {
+	Code ResCode     `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
+}
+
 type HandlerFunc func(c *Context)
 
-const (
-	SuccessCode      ResponseCode = 0
-	BadRequestCode   ResponseCode = 400
-	UnauthorizedCode ResponseCode = 401
-	ForbiddenCode    ResponseCode = 403
-	NotFoundCode     ResponseCode = 404
-)
+func (ctx *Context) NewResponse(code ResCode, data interface{}, msg string) {
+	ctx.JSON(http.StatusOK, ResponseBody{
+		Code: code,
+		Msg:  msg,
+		Data: data,
+	})
+}
 
 func (ctx *Context) ResOk(data any) {
-	ctx.JSON(http.StatusOK, map[string]any{
-		"code":    SuccessCode,
-		"data":    data,
-		"message": "success",
-		"errors":  nil,
-	})
+	ctx.NewResponse(CODE_SUCCESS, data, "ok")
 }
 
-type ResponseFailInfo struct {
-	Code   ResponseCode
-	Errors []error
-}
-
-type ResponseBody struct {
-	ResponseFailInfo
-	Data    any
-	Message string
-}
-
-func (ctx *Context) ResFail(message string, infos ...ResponseFailInfo) {
-	info := ResponseFailInfo{}
-	if len(infos) != 0 {
-		info = infos[0]
+func (ctx *Context) ResFailed(err error, codes ...ResCode) {
+	code := CODE_BAD_REQUEST
+	if len(codes) != 0 {
+		code = codes[0]
 	}
-	code := info.Code
-	if code == 0 {
-		code = BadRequestCode
+	msg := ""
+	if err != nil {
+		msg = err.Error()
 	}
-	ctx.JSON(http.StatusOK, map[string]any{
-		"code":    code,
-		"data":    nil,
-		"message": message,
-		"errors":  info.Errors,
-	})
+	ctx.NewResponse(code, nil, msg)
 }
 
-func (ctx *Context) ResNotFound(messages ...string) {
-	message := "您访问的资源不存在"
-	if len(messages) != 0 {
-		message = messages[0]
+func (ctx *Context) ResNotFound(msgs ...string) {
+	msg := "您访问的资源不存在"
+	if len(msgs) != 0 {
+		msg = msgs[0]
 	}
-	ctx.JSON(http.StatusOK, map[string]any{
-		"code":    NotFoundCode,
-		"data":    nil,
-		"message": message,
-		"errors":  nil,
-	})
+	ctx.NewResponse(CODE_NOT_FOUND, nil, msg)
 }
 
-func CreateHandlerFunc(h HandlerFunc) gin.HandlerFunc {
+func CreateHandlerFunc(handle HandlerFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx := &Context{
 			c,
 		}
-		h(ctx)
+		handle(ctx)
 	}
 }

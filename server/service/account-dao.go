@@ -17,9 +17,9 @@ func NewAccountDaoService(db *gorm.DB) *AccountDao {
 	return &AccountDao{db}
 }
 
-func (a *AccountDao) GetOne(accountNo string) *model.Account {
+func (s *AccountDao) GetOne(accountNo string) *model.Account {
 	account := &model.Account{}
-	result := a.db.Where("account_no = ?", accountNo).Find(account)
+	result := s.db.Where("account_no = ?", accountNo).Find(account)
 	if result.Error != nil {
 		global.Logger.Error(result.Error)
 		return nil
@@ -27,12 +27,12 @@ func (a *AccountDao) GetOne(accountNo string) *model.Account {
 	return account
 }
 
-func (a *AccountDao) GetByUserIdAndType(
+func (s *AccountDao) GetByUserIdAndType(
 	userId string,
 	accountType model.AccountType,
 ) *model.Account {
 	account := &model.Account{}
-	result := a.db.Where("user_id = ? and account_type = ?", userId, accountType).First(account)
+	result := s.db.Where("user_id = ? and type = ?", userId, accountType).First(account)
 	if result.Error != nil {
 		global.Logger.Error(result.Error)
 		return nil
@@ -40,8 +40,8 @@ func (a *AccountDao) GetByUserIdAndType(
 	return account
 }
 
-func (a *AccountDao) Inert(account *model.Account) error {
-	result := a.db.Create(account)
+func (s *AccountDao) Inert(account *model.Account) error {
+	result := s.db.Create(account)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -54,7 +54,7 @@ func (a *AccountDao) Inert(account *model.Account) error {
 
 // 账户余额的更新
 // amount 如果是负数，就是扣减；如果是正数，就是增加
-func (a *AccountDao) UpdateBalance(
+func (s *AccountDao) UpdateBalance(
 	accountNo string,
 	amount decimal.Decimal,
 ) (int64, error) {
@@ -65,7 +65,7 @@ func (a *AccountDao) UpdateBalance(
 		 and balance>=-1*CAST(? AS DECIMAL(30,6))
 	`
 	amountStr := amount.String()
-	result := a.db.Exec(
+	result := s.db.Exec(
 		sql,
 		amountStr,
 		accountNo,
@@ -74,7 +74,7 @@ func (a *AccountDao) UpdateBalance(
 	return result.RowsAffected, result.Error
 }
 
-func (a *AccountDao) UpdateStatus(accountNo string, status model.AccountStatus) (int64, error) {
-	result := a.db.Model(model.Account{}).Where("accountNo = ?", accountNo).Update("status", status)
+func (s *AccountDao) UpdateStatus(accountNo string, status model.AccountStatus) (int64, error) {
+	result := s.db.Model(model.Account{}).Where("accountNo = ?", accountNo).Update("status", status)
 	return result.RowsAffected, result.Error
 }

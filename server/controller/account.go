@@ -15,18 +15,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type AccountController struct{}
+type Account struct{}
 
 func NewAccountController() Controller {
-	return &AccountController{}
+	return &Account{}
 }
 
 // 创建账户
-func (c *AccountController) Create(ctx *core.Context) {
+func (c *Account) Create(ctx *core.Context) {
 	account := &model.Account{}
 	if err := ctx.BindJSON(account); err != nil {
 		global.Logger.Error(err)
-		ctx.ResFail("请求参数错误")
+		ctx.ResFailed(err)
 		return
 	}
 	err := global.DB.Transaction(func(tx *gorm.DB) error {
@@ -46,13 +46,13 @@ func (c *AccountController) Create(ctx *core.Context) {
 		return nil
 	})
 	if err != nil {
-		ctx.ResFail("创建失败" + err.Error())
+		ctx.ResFailed(err)
 		return
 	}
 	ctx.ResOk(account)
 }
 
-func (c *AccountController) Detail(ctx *core.Context) {
+func (c *Account) Detail(ctx *core.Context) {
 	accountService := service.NewAccountService(global.DB)
 	account := accountService.GetByNo(ctx.Param("accountNo"))
 	if account == nil {
@@ -62,7 +62,7 @@ func (c *AccountController) Detail(ctx *core.Context) {
 	ctx.ResOk(account)
 }
 
-func (c *AccountController) Transfer(ctx *core.Context) {
+func (c *Account) Transfer(ctx *core.Context) {
 	// 先查找账户
 	accountService := service.NewAccountService(global.DB)
 	sourceAccountNo := ctx.Param("accountNo")
@@ -81,12 +81,12 @@ func (c *AccountController) Transfer(ctx *core.Context) {
 	transferDto := &model.AccountTransferDTO{}
 	err := ctx.BindJSON(transferDto)
 	if err != nil {
-		ctx.ResFail(err.Error())
+		ctx.ResFailed(err)
 		return
 	}
 	amount, err := decimal.NewFromString(transferDto.AmountStr)
 	if err != nil {
-		ctx.ResFail(err.Error())
+		ctx.ResFailed(err)
 		return
 	}
 	transferDto.Amount = amount
@@ -95,7 +95,7 @@ func (c *AccountController) Transfer(ctx *core.Context) {
 	// 验证参数
 	err = utils.ValidateStruct(transferDto)
 	if err != nil {
-		ctx.ResFail(err.Error())
+		ctx.ResFailed(err)
 		return
 	}
 	// 开始转账
@@ -111,17 +111,17 @@ func (c *AccountController) Transfer(ctx *core.Context) {
 		return nil
 	})
 	if err != nil {
-		ctx.ResFail(err.Error())
+		ctx.ResFailed(err)
 		return
 	}
 	ctx.ResOk(nil)
 }
 
-func (c *AccountController) Name() string {
+func (c *Account) Name() string {
 	return "account"
 }
 
-func (c *AccountController) RegisterRoute(api *gin.RouterGroup) {
+func (c *Account) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/accounts", core.CreateHandlerFunc(c.Create))
 	api.GET("/accounts/:accountNo", core.CreateHandlerFunc(c.Detail))
 	api.POST("/accounts/:accountNo/transfer/:targetAccountNo", core.CreateHandlerFunc(c.Transfer))

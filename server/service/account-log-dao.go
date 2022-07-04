@@ -15,8 +15,8 @@ func NewAccountLogDaoService(db *gorm.DB) *AccountLogDao {
 	return &AccountLogDao{db}
 }
 
-func (a *AccountLogDao) Inert(accountLog *model.AccountLog) error {
-	result := a.db.Create(accountLog)
+func (s *AccountLogDao) Inert(accountLog *model.AccountLog) error {
+	result := s.db.Create(accountLog)
 	if result.Error != nil {
 		return result.Error
 	}
