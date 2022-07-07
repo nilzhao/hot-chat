@@ -1,6 +1,8 @@
 package starter
 
 type IStarter interface {
+	// 启动器名称
+	Name() string
 	// 1. 系统启动,初始化一些资源
 	Init()
 	// 2. 系统资源安装
@@ -35,14 +37,16 @@ func Register(s IStarter) {
 
 type BaseStarter struct{}
 
-func (b *BaseStarter) Init() {}
+func (s *BaseStarter) Name() string { return "未知" }
 
-func (b *BaseStarter) Setup() {}
+func (s *BaseStarter) Init() {}
 
-func (b *BaseStarter) Start() {}
+func (s *BaseStarter) Setup() {}
 
-func (b *BaseStarter) StartBlocking() bool {
+func (s *BaseStarter) Start() {}
+
+func (s *BaseStarter) StartBlocking() bool {
 	return false
 }
 
-func (b *BaseStarter) Stop() {}
+func (s *BaseStarter) Stop() {}

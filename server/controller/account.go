@@ -8,8 +8,6 @@ import (
 	"red-server/service"
 	"red-server/utils"
 
-	"red-server/core"
-
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
@@ -22,11 +20,11 @@ func NewAccountController() Controller {
 }
 
 // 创建账户
-func (c *Account) Create(ctx *core.Context) {
+func (c *Account) Create(ctx *gin.Context) {
 	account := &model.Account{}
 	if err := ctx.BindJSON(account); err != nil {
 		global.Logger.Error(err)
-		ctx.ResFailed(err)
+		utils.ResFailed(ctx, err)
 		return
 	}
 	err := global.DB.Transaction(func(tx *gorm.DB) error {
@@ -46,47 +44,47 @@ func (c *Account) Create(ctx *core.Context) {
 		return nil
 	})
 	if err != nil {
-		ctx.ResFailed(err)
+		utils.ResFailed(ctx, err)
 		return
 	}
-	ctx.ResOk(account)
+	utils.ResOk(ctx, account)
 }
 
-func (c *Account) Detail(ctx *core.Context) {
+func (c *Account) Detail(ctx *gin.Context) {
 	accountService := service.NewAccountService(global.DB)
 	account := accountService.GetByNo(ctx.Param("accountNo"))
 	if account == nil {
-		ctx.ResNotFound()
+		utils.ResNotFound(ctx)
 		return
 	}
-	ctx.ResOk(account)
+	utils.ResOk(ctx, account)
 }
 
-func (c *Account) Transfer(ctx *core.Context) {
+func (c *Account) Transfer(ctx *gin.Context) {
 	// 先查找账户
 	accountService := service.NewAccountService(global.DB)
 	sourceAccountNo := ctx.Param("accountNo")
 	targetAccountNo := ctx.Param("targetAccountNo")
 	sourceAccount := accountService.GetByNo(sourceAccountNo)
 	if sourceAccount == nil {
-		ctx.ResNotFound(fmt.Sprintf("账号[%s]不存在", sourceAccountNo))
+		utils.ResNotFound(ctx, fmt.Sprintf("账号[%s]不存在", sourceAccountNo))
 		return
 	}
 	targetAccount := accountService.GetByNo(targetAccountNo)
 	if targetAccount == nil {
-		ctx.ResNotFound(fmt.Sprintf("账号[%s]不存在", targetAccountNo))
+		utils.ResNotFound(ctx, fmt.Sprintf("账号[%s]不存在", targetAccountNo))
 		return
 	}
 	// 组合转账的参数
 	transferDto := &model.AccountTransferDTO{}
 	err := ctx.BindJSON(transferDto)
 	if err != nil {
-		ctx.ResFailed(err)
+		utils.ResFailed(ctx, err)
 		return
 	}
 	amount, err := decimal.NewFromString(transferDto.AmountStr)
 	if err != nil {
-		ctx.ResFailed(err)
+		utils.ResFailed(ctx, err)
 		return
 	}
 	transferDto.Amount = amount
@@ -95,7 +93,7 @@ func (c *Account) Transfer(ctx *core.Context) {
 	// 验证参数
 	err = utils.ValidateStruct(transferDto)
 	if err != nil {
-		ctx.ResFailed(err)
+		utils.ResFailed(ctx, err)
 		return
 	}
 	// 开始转账
@@ -111,18 +109,14 @@ func (c *Account) Transfer(ctx *core.Context) {
 		return nil
 	})
 	if err != nil {
-		ctx.ResFailed(err)
+		utils.ResFailed(ctx, err)
 		return
 	}
-	ctx.ResOk(nil)
-}
-
-func (c *Account) Name() string {
-	return "account"
+	utils.ResOk(ctx, nil)
 }
 
 func (c *Account) RegisterRoute(api *gin.RouterGroup) {
-	api.POST("/accounts", core.CreateHandlerFunc(c.Create))
-	api.GET("/accounts/:accountNo", core.CreateHandlerFunc(c.Detail))
-	api.POST("/accounts/:accountNo/transfer/:targetAccountNo", core.CreateHandlerFunc(c.Transfer))
+	api.POST("/accounts", c.Create)
+	api.GET("/accounts/:accountNo", c.Detail)
+	api.POST("/accounts/:accountNo/transfer/:targetAccountNo", c.Transfer)
 }

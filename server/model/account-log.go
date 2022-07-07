@@ -1,8 +1,6 @@
 package model
 
 import (
-	"database/sql"
-
 	"github.com/shopspring/decimal"
 )
 
@@ -47,14 +45,14 @@ const (
 
 type AccountLog struct {
 	LogBaseModel
-	LogNo           string            `gorm:"unique"` // 流水编号 全局不重复字符或数字，唯一性标识
+	LogNo           string            `gorm:"uniqueIndex"` // 流水编号 全局不重复字符或数字，唯一性标识
 	TradeNo         string            // 交易单号 全局不重复字符或数字，唯一性标识
 	AccountNo       string            // 账户编号 账户ID
 	UserId          string            // 用户编号
-	Username        sql.NullString    // 用户名称
+	Username        string            // 用户名称
 	TargetAccountNo string            // 账户编号 账户ID
 	TargetUserId    string            // 目标用户编号
-	TargetUsername  sql.NullString    // 目标用户名称
+	TargetUsername  string            // 目标用户名称
 	Amount          decimal.Decimal   // 交易金额,该交易涉及的金额
 	Balance         decimal.Decimal   // 交易后余额,该交易后的余额
 	ChangeType      AccountChangeType // 流水交易类型，0 创建账户，>0 为收入类型，<0 为支出类型，自定义

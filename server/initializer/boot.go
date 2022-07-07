@@ -4,6 +4,7 @@
 package initializer
 
 import (
+	"fmt"
 	starter "red-server/initializer/starter"
 )
 
@@ -34,6 +35,7 @@ func (b *BootApplication) register() {
 
 func (b *BootApplication) init() {
 	for _, starter := range starter.StarterRegister.AllStarters() {
+		fmt.Printf("初始化[%s]...\n", starter.Name())
 		starter.Init()
 	}
 }
@@ -57,7 +59,7 @@ func (b *BootApplication) start() {
 			}
 		} else {
 			s.Start()
-
 		}
+		fmt.Printf("启动[%s]成功\n", s.Name())
 	}
 }

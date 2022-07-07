@@ -8,7 +8,7 @@ import (
 
 // 日志类的 model,无需更新和删除
 type LogBaseModel struct {
-	Id        uint      `gorm:"primarykey" json:"id"`
+	Id        uint      `gorm:"primaryKey" json:"id"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 

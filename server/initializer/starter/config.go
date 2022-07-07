@@ -18,11 +18,13 @@ type ConfigStarter struct {
 	BaseStarter
 }
 
+func (s *ConfigStarter) Name() string {
+	return "配置"
+}
+
 func (s *ConfigStarter) Init() {
-	fmt.Println("初始化配置...")
 	configPath := getConfig()
 	parseConfig(configPath)
-	fmt.Println("初始化配置成功")
 }
 
 func getConfig() (configPath string) {

@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
-	"gopkg.in/go-playground/validator.v9"
-	zhTranslations "gopkg.in/go-playground/validator.v9/translations/zh"
+	"github.com/go-playground/validator/v10"
+	zhTranslations "github.com/go-playground/validator/v10/translations/zh"
 )
 
 var (

@@ -1,4 +1,4 @@
-package core
+package utils
 
 import (
 	"net/http"
@@ -16,19 +16,13 @@ const (
 	CODE_NOT_FOUND    ResCode = 404
 )
 
-type Context struct {
-	*gin.Context
-}
-
 type ResponseBody struct {
 	Code ResCode     `json:"code"`
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
 
-type HandlerFunc func(c *Context)
-
-func (ctx *Context) NewResponse(code ResCode, data interface{}, msg string) {
+func NewResponse(ctx *gin.Context, code ResCode, data interface{}, msg string) {
 	ctx.JSON(http.StatusOK, ResponseBody{
 		Code: code,
 		Msg:  msg,
@@ -36,11 +30,11 @@ func (ctx *Context) NewResponse(code ResCode, data interface{}, msg string) {
 	})
 }
 
-func (ctx *Context) ResOk(data any) {
-	ctx.NewResponse(CODE_SUCCESS, data, "ok")
+func ResOk(ctx *gin.Context, data any) {
+	NewResponse(ctx, CODE_SUCCESS, data, "ok")
 }
 
-func (ctx *Context) ResFailed(err error, codes ...ResCode) {
+func ResFailed(ctx *gin.Context, err error, codes ...ResCode) {
 	code := CODE_BAD_REQUEST
 	if len(codes) != 0 {
 		code = codes[0]
@@ -49,22 +43,13 @@ func (ctx *Context) ResFailed(err error, codes ...ResCode) {
 	if err != nil {
 		msg = err.Error()
 	}
-	ctx.NewResponse(code, nil, msg)
+	NewResponse(ctx, code, nil, msg)
 }
 
-func (ctx *Context) ResNotFound(msgs ...string) {
+func ResNotFound(ctx *gin.Context, msgs ...string) {
 	msg := "您访问的资源不存在"
 	if len(msgs) != 0 {
 		msg = msgs[0]
 	}
-	ctx.NewResponse(CODE_NOT_FOUND, nil, msg)
-}
-
-func CreateHandlerFunc(handle HandlerFunc) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		ctx := &Context{
-			c,
-		}
-		handle(ctx)
-	}
+	NewResponse(ctx, CODE_NOT_FOUND, nil, msg)
 }

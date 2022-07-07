@@ -9,15 +9,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type AccountDao struct {
+type AccountDaoService struct {
 	db *gorm.DB
 }
 
-func NewAccountDaoService(db *gorm.DB) *AccountDao {
-	return &AccountDao{db}
+func NewAccountDaoService(db *gorm.DB) *AccountDaoService {
+	return &AccountDaoService{db}
 }
 
-func (s *AccountDao) GetOne(accountNo string) *model.Account {
+func (s *AccountDaoService) GetOne(accountNo string) *model.Account {
 	account := &model.Account{}
 	result := s.db.Where("account_no = ?", accountNo).Find(account)
 	if result.Error != nil {
@@ -27,7 +27,7 @@ func (s *AccountDao) GetOne(accountNo string) *model.Account {
 	return account
 }
 
-func (s *AccountDao) GetByUserIdAndType(
+func (s *AccountDaoService) GetByUserIdAndType(
 	userId string,
 	accountType model.AccountType,
 ) *model.Account {
@@ -40,7 +40,7 @@ func (s *AccountDao) GetByUserIdAndType(
 	return account
 }
 
-func (s *AccountDao) Inert(account *model.Account) error {
+func (s *AccountDaoService) Inert(account *model.Account) error {
 	result := s.db.Create(account)
 	if result.Error != nil {
 		return result.Error
@@ -48,13 +48,12 @@ func (s *AccountDao) Inert(account *model.Account) error {
 	if result.RowsAffected <= 0 {
 		return errors.New("账户创建失败")
 	}
-
 	return nil
 }
 
 // 账户余额的更新
 // amount 如果是负数，就是扣减；如果是正数，就是增加
-func (s *AccountDao) UpdateBalance(
+func (s *AccountDaoService) UpdateBalance(
 	accountNo string,
 	amount decimal.Decimal,
 ) (int64, error) {
@@ -74,7 +73,7 @@ func (s *AccountDao) UpdateBalance(
 	return result.RowsAffected, result.Error
 }
 
-func (s *AccountDao) UpdateStatus(accountNo string, status model.AccountStatus) (int64, error) {
+func (s *AccountDaoService) UpdateStatus(accountNo string, status model.AccountStatus) (int64, error) {
 	result := s.db.Model(model.Account{}).Where("accountNo = ?", accountNo).Update("status", status)
 	return result.RowsAffected, result.Error
 }

@@ -8,12 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type AccountLog struct {
+type AccountLogService struct {
 	db *gorm.DB
 }
 
-func NewAccountLogService(db *gorm.DB) *AccountLog {
-	return &AccountLog{db}
+func NewAccountLogService(db *gorm.DB) *AccountLogService {
+	return &AccountLogService{db}
 }
 
 func createLogNo() string {
@@ -25,7 +25,7 @@ func createTradeNo() string {
 }
 
 // 创建账户时的日志
-func (s *AccountLog) GenerateAccountCreatedLog(account *model.Account) model.AccountLog {
+func (s *AccountLogService) GenerateAccountCreatedLog(account *model.Account) model.AccountLog {
 	logNo := createLogNo()
 	accountLog := model.AccountLog{
 		LogNo:           logNo,
@@ -45,7 +45,7 @@ func (s *AccountLog) GenerateAccountCreatedLog(account *model.Account) model.Acc
 	return accountLog
 }
 
-func (s *AccountLog) GenerateAccountTransferredLog(
+func (s *AccountLogService) GenerateAccountTransferredLog(
 	dto *model.AccountTransferDTO,
 	status model.TransferredStatus,
 	balance decimal.Decimal,
@@ -71,7 +71,7 @@ func (s *AccountLog) GenerateAccountTransferredLog(
 	return accountLog
 }
 
-func (s *AccountLog) Create(accountLog *model.AccountLog) error {
+func (s *AccountLogService) Create(accountLog *model.AccountLog) error {
 	accountLogDaoService := NewAccountLogDaoService(s.db)
 	return accountLogDaoService.Inert(accountLog)
 }

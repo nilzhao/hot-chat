@@ -4,6 +4,14 @@ system:
   port: 18080
   name: 抢红包系统
 
+jwt:
+  # 秘钥
+  salt: 123456
+  # 存储在 request header 中的 key
+  key: X-Token
+  # 有效期 7 天
+  period: 604800
+
 db:
   driverName: mysql
   port: 3306
@@ -21,6 +29,7 @@ db:
     charset: utf8
     parseTime: true
     loc: Local
+
 log:
   dir: ./tmp/log/
   name: red.log

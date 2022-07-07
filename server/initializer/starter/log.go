@@ -2,7 +2,6 @@
 package starter
 
 import (
-	"fmt"
 	"red-server/global"
 
 	"github.com/rifflock/lfshook"
@@ -13,8 +12,11 @@ type LogStarter struct {
 	BaseStarter
 }
 
+func (s *LogStarter) Name() string {
+	return "日志"
+}
+
 func (s *LogStarter) Init() {
-	fmt.Println("初始化日志...")
 	logger := logrus.StandardLogger()
 	// 定义日志格式
 	formatter := global.CONFIG.Log.GetFormatter()
@@ -32,5 +34,4 @@ func (s *LogStarter) Init() {
 	lfHook := lfshook.NewHook(writerMap, formatter)
 	logger.AddHook(lfHook)
 	global.Logger = logger
-	fmt.Println("初始化日志成功")
 }

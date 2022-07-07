@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"red-server/core"
 	"red-server/model"
 	"red-server/utils"
 
@@ -10,16 +9,16 @@ import (
 
 type EnvelopeGoods struct{}
 
-func (c *EnvelopeGoods) SendOut(ctx *core.Context) {
+func (c *EnvelopeGoods) SendOut(ctx *gin.Context) {
 	goods := &model.EnvelopeGoods{}
 	err := ctx.ShouldBind(goods)
 	if err != nil {
-		ctx.ResFailed(err)
+		utils.ResFailed(ctx, err)
 		return
 	}
 	err = utils.ValidateStruct(goods)
 	if err != nil {
-		ctx.ResFailed(err)
+		utils.ResFailed(ctx, err)
 		return
 	}
 
@@ -27,8 +26,4 @@ func (c *EnvelopeGoods) SendOut(ctx *core.Context) {
 
 func (c *EnvelopeGoods) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/users/:userId/")
-}
-
-func (c *EnvelopeGoods) TableName() string {
-	return "envelopeGoods"
 }

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"database/sql"
 	"time"
 
 	"github.com/shopspring/decimal"
@@ -51,14 +50,14 @@ type EnvelopeGoods struct {
 	EnvelopeNo       string            `json:"envelopeNo"`               // 红包编号
 	Type             EnvelopeType      `json:"type" validate:"required"` // 红包类型:普通红包/碰运气红包
 	UserId           string            `json:"userId" validate:"required"`
-	Username         sql.NullString    `json:"username" validate:"required"`
+	Username         string            `json:"username" validate:"required"`
 	Amount           decimal.Decimal   `json:"amount"`           // 总金额
 	AmountOne        decimal.Decimal   `json:"amountOne"`        // 普通红包单个红包金额
 	Quantity         int               `json:"quantity"`         // 红包数量
 	RemainAmount     decimal.Decimal   `json:"remainAmount"`     // 剩余金额
 	RemainQuantity   int               `json:"remainQuantity"`   // 红包剩余数量
 	ExpiredAt        time.Time         `json:"expired"`          // 过期时间
-	Blessing         sql.NullString    `json:"blessing"`         // 祝福语
+	Blessing         string            `json:"blessing"`         // 祝福语
 	Status           EnvelopeStatus    `json:"status"`           // 状态: 0红包初始化;1 启动;2 失效
 	OrderType        EnvelopeOrderType `json:"orderType"`        // 订单状态: 发布单/退款单
 	PayStatus        EnvelopePayStatus `json:"payStatus"`        // 支付状态: 未支付/支付中/已支付/支付失败

@@ -1,7 +1,6 @@
 package starter
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"red-server/global"
@@ -19,8 +18,11 @@ type DBStarter struct {
 	mysqlConfig mysql.Config
 }
 
+func (s *DBStarter) Name() string {
+	return "数据库"
+}
+
 func (s *DBStarter) Init() {
-	fmt.Println("初始化数据库...")
 	config := &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 		NamingStrategy: schema.NamingStrategy{
@@ -45,18 +47,16 @@ func (s *DBStarter) Init() {
 	}
 
 	s.mysqlConfig = mysqlConfig
-	fmt.Println("初始化数据库成功")
 }
 
 func (s *DBStarter) Start() {
 	db, err := gorm.Open(mysql.New(s.mysqlConfig), s.gormConfig)
 	if err != nil {
-		log.Panic("数据库连接失败")
+		panic(err)
 	} else {
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(global.CONFIG.DB.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(global.CONFIG.DB.MaxOpenConns)
-		fmt.Println("数据库连接成功")
 	}
 	global.DB = db
 }

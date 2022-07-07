@@ -39,8 +39,6 @@ func (s *EnvelopeGoods) SendOut(goods model.EnvelopeGoods) {
 // 生成红包订单
 func (c *EnvelopeGoods) GenerateCreatedGoods(goods model.EnvelopeGoods) model.EnvelopeGoods {
 	goods.RemainQuantity = goods.Quantity
-	goods.Username.Valid = true
-	goods.Blessing.Valid = true
 	// 普通红包,计算出红包金额
 	if goods.Type == model.ENVELOPE_TYPE_GENERAL {
 		goods.Amount = goods.AmountOne.Mul(

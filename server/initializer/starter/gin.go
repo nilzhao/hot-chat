@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"red-server/controller"
 	"red-server/global"
+	"red-server/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +14,10 @@ type GinStarter struct {
 	engine *gin.Engine
 }
 
+func (s *GinStarter) Name() string {
+	return "api 服务"
+}
+
 func (s *GinStarter) Init() {
 	s.engine = gin.Default()
 }
@@ -20,6 +25,8 @@ func (s *GinStarter) Init() {
 func (s *GinStarter) Setup() {
 	// 注册路由
 	api := s.engine.Group("/api/v1")
+	controller.NewAuthController().RegisterRoute(api)
+	api.Use(middleware.Auth())
 	controller.NewAccountController().RegisterRoute(api)
 }
 

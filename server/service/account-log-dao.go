@@ -7,15 +7,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type AccountLogDao struct {
+type AccountLogDaoService struct {
 	db *gorm.DB
 }
 
-func NewAccountLogDaoService(db *gorm.DB) *AccountLogDao {
-	return &AccountLogDao{db}
+func NewAccountLogDaoService(db *gorm.DB) *AccountLogDaoService {
+	return &AccountLogDaoService{db}
 }
 
-func (s *AccountLogDao) Inert(accountLog *model.AccountLog) error {
+func (s *AccountLogDaoService) Inert(accountLog *model.AccountLog) error {
 	result := s.db.Create(accountLog)
 	if result.Error != nil {
 		return result.Error
