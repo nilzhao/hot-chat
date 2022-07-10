@@ -25,7 +25,7 @@ func createTradeNo() string {
 }
 
 // 创建账户时的日志
-func (s *AccountLogService) GenerateAccountCreatedLog(account *model.Account) model.AccountLog {
+func (s *AccountLogService) GenerateAccountCreatingLog(account *model.Account) model.AccountLog {
 	logNo := createLogNo()
 	accountLog := model.AccountLog{
 		LogNo:           logNo,
@@ -45,7 +45,7 @@ func (s *AccountLogService) GenerateAccountCreatedLog(account *model.Account) mo
 	return accountLog
 }
 
-func (s *AccountLogService) GenerateAccountTransferredLog(
+func (s *AccountLogService) GenerateAccountTransferringLog(
 	dto *model.AccountTransferDTO,
 	status model.TransferredStatus,
 	balance decimal.Decimal,
@@ -73,5 +73,5 @@ func (s *AccountLogService) GenerateAccountTransferredLog(
 
 func (s *AccountLogService) Create(accountLog *model.AccountLog) error {
 	accountLogDaoService := NewAccountLogDaoService(s.db)
-	return accountLogDaoService.Inert(accountLog)
+	return accountLogDaoService.Insert(accountLog)
 }

@@ -28,10 +28,10 @@ func (s *UserService) Create(userDto *model.UserCreateDto) (*model.User, error) 
 		Avatar:   userDto.Avatar,
 		Birthday: userDto.Birthday,
 	}
-	return User, userDaoService.Inert(User)
+	return User, userDaoService.Insert(User)
 }
 
-func (s *UserService) GetOne(id int64) *model.User {
+func (s *UserService) GetOne(id uint) *model.User {
 	userDaoService := NewUserDaoService(s.db)
 	user := userDaoService.GetOne(id)
 	return user

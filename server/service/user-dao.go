@@ -19,7 +19,7 @@ func NewUserDaoService(db *gorm.DB) *UserDaoService {
 	return &UserDaoService{db}
 }
 
-func (s *UserDaoService) Inert(user *model.User) error {
+func (s *UserDaoService) Insert(user *model.User) error {
 	result := s.db.Select(userCreateField).Create(user)
 	if result.Error != nil {
 		return result.Error
@@ -27,7 +27,7 @@ func (s *UserDaoService) Inert(user *model.User) error {
 	return nil
 }
 
-func (s *UserDaoService) GetOne(id int64) *model.User {
+func (s *UserDaoService) GetOne(id uint) *model.User {
 	user := &model.User{}
 	result := s.db.First(user, id)
 	if result.Error != nil {

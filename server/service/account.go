@@ -9,22 +9,22 @@ import (
 	"gorm.io/gorm"
 )
 
-type Account struct {
+type AccountService struct {
 	db *gorm.DB
 }
 
-func NewAccountService(db *gorm.DB) *Account {
-	return &Account{db}
+func NewAccountService(db *gorm.DB) *AccountService {
+	return &AccountService{db}
 }
 
-func (s *Account) GenerateAccountNo() string {
+func (s *AccountService) GenerateAccountNo() string {
 	return ksuid.New().Next().String()
 }
 
-func (s *Account) Create(account *model.Account) error {
+func (s *AccountService) Create(account *model.Account) error {
 	account.AccountNo = s.GenerateAccountNo()
 	accountDaoService := NewAccountDaoService(s.db)
-	return accountDaoService.Inert(account)
+	return accountDaoService.Insert(account)
 }
 
 // 修正 amount
@@ -36,7 +36,9 @@ func fixTransferAmount(dto *model.AccountTransferDTO) decimal.Decimal {
 	return amount
 }
 
-func (s *Account) Transfer(dto *model.AccountTransferDTO) (status model.TransferredStatus, err error) {
+func (s *AccountService) Transfer(
+	dto *model.AccountTransferDTO,
+) (status model.TransferredStatus, err error) {
 	// 先转账给别人
 	status, err = s.TransferTo(dto)
 	if status != model.TRANSFERRED_STATUS_SUCCESS || err != nil {
@@ -47,7 +49,7 @@ func (s *Account) Transfer(dto *model.AccountTransferDTO) (status model.Transfer
 }
 
 // 转账
-func (s *Account) TransferTo(
+func (s *AccountService) TransferTo(
 	dto *model.AccountTransferDTO,
 ) (status model.TransferredStatus, err error) {
 	accountDaoService := NewAccountDaoService(s.db)
@@ -65,7 +67,7 @@ func (s *Account) TransferTo(
 	if account == nil {
 		return statusFailure, errors.New("账户不存在")
 	}
-	accountLog := accountLogService.GenerateAccountTransferredLog(dto, status, account.Balance)
+	accountLog := accountLogService.GenerateAccountTransferringLog(dto, status, account.Balance)
 	err = accountLogService.Create(accountLog)
 	if err != nil {
 		return statusFailure, err
@@ -74,7 +76,7 @@ func (s *Account) TransferTo(
 	return model.TRANSFERRED_STATUS_SUCCESS, err
 }
 
-func (s *Account) MayTransferBack(
+func (s *AccountService) MayTransferBack(
 	dto *model.AccountTransferDTO,
 ) (model.TransferredStatus, error) {
 	// 转账成功后,并且交易主体和交易目标不是同一个人,而且交易类型不是储值,则进行反向操作
@@ -90,7 +92,12 @@ func (s *Account) MayTransferBack(
 	return model.TRANSFERRED_STATUS_SUCCESS, nil
 }
 
-func (s *Account) GetByNo(accountNo string) *model.Account {
+func (s *AccountService) Get(accountNo string) *model.Account {
 	accountDaoService := NewAccountDaoService(s.db)
 	return accountDaoService.GetOne(accountNo)
+}
+
+func (s *AccountService) GetByUserId(userId uint, accountType model.AccountType) *model.Account {
+	accountDaoService := NewAccountDaoService(s.db)
+	return accountDaoService.GetByUserId(userId, accountType)
 }

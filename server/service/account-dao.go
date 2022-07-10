@@ -27,6 +27,16 @@ func (s *AccountDaoService) GetOne(accountNo string) *model.Account {
 	return account
 }
 
+func (s *AccountDaoService) GetByUserId(userId uint, accountType model.AccountType) *model.Account {
+	account := &model.Account{}
+	result := s.db.Where("user_id = ? and type = ?", userId, accountType).Find(account)
+	if result.Error != nil {
+		global.Logger.Error(result.Error)
+		return nil
+	}
+	return account
+}
+
 func (s *AccountDaoService) GetByUserIdAndType(
 	userId string,
 	accountType model.AccountType,
@@ -40,13 +50,13 @@ func (s *AccountDaoService) GetByUserIdAndType(
 	return account
 }
 
-func (s *AccountDaoService) Inert(account *model.Account) error {
+func (s *AccountDaoService) Insert(account *model.Account) error {
 	result := s.db.Create(account)
 	if result.Error != nil {
 		return result.Error
 	}
 	if result.RowsAffected <= 0 {
-		return errors.New("账户创建失败")
+		return errors.New("账户已存在")
 	}
 	return nil
 }

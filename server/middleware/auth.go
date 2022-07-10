@@ -19,11 +19,11 @@ func Auth() gin.HandlerFunc {
 
 		claims, err := utils.ParseToken(token)
 		if claims == nil || err != nil {
-			utils.ResFailed(ctx, errors.New("token已过期"), utils.CODE_UNAUTHORIZED)
+			utils.ResFailed(ctx, errors.New("无效的 token"), utils.CODE_UNAUTHORIZED)
 			ctx.Abort()
 			return
 		}
-		utils.SetUser(ctx, &claims.User)
+		utils.SetCurrentUser(ctx, &claims.User)
 		ctx.Next()
 	}
 }

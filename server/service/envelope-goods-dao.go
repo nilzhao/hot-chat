@@ -16,7 +16,7 @@ func NewEnvelopeGoodsDaoService(db *gorm.DB) *EnvelopeGoodsDao {
 	return &EnvelopeGoodsDao{db}
 }
 
-func (s *EnvelopeGoodsDao) Inert(envelopeGoods *model.EnvelopeGoods) error {
+func (s *EnvelopeGoodsDao) Insert(envelopeGoods *model.EnvelopeGoods) error {
 	result := s.db.Create(envelopeGoods)
 	if result.Error != nil {
 		return result.Error

@@ -21,12 +21,15 @@ func NewAccountController() Controller {
 
 // 创建账户
 func (c *Account) Create(ctx *gin.Context) {
+	user := utils.GetCurrentUser(ctx)
 	account := &model.Account{}
 	if err := ctx.BindJSON(account); err != nil {
 		global.Logger.Error(err)
 		utils.ResFailed(ctx, err)
 		return
 	}
+	account.UserId = user.Id
+	account.Username = user.Name
 	err := global.DB.Transaction(func(tx *gorm.DB) error {
 		accountService := service.NewAccountService(tx)
 		accountLogService := service.NewAccountLogService(tx)
@@ -36,7 +39,7 @@ func (c *Account) Create(ctx *gin.Context) {
 			return err
 		}
 		// 生成日志
-		accountLog := accountLogService.GenerateAccountCreatedLog(account)
+		accountLog := accountLogService.GenerateAccountCreatingLog(account)
 		err = accountLogService.Create(&accountLog)
 		if err != nil {
 			return err
@@ -52,7 +55,7 @@ func (c *Account) Create(ctx *gin.Context) {
 
 func (c *Account) Detail(ctx *gin.Context) {
 	accountService := service.NewAccountService(global.DB)
-	account := accountService.GetByNo(ctx.Param("accountNo"))
+	account := accountService.Get(ctx.Param("accountNo"))
 	if account == nil {
 		utils.ResNotFound(ctx)
 		return
@@ -65,12 +68,12 @@ func (c *Account) Transfer(ctx *gin.Context) {
 	accountService := service.NewAccountService(global.DB)
 	sourceAccountNo := ctx.Param("accountNo")
 	targetAccountNo := ctx.Param("targetAccountNo")
-	sourceAccount := accountService.GetByNo(sourceAccountNo)
+	sourceAccount := accountService.Get(sourceAccountNo)
 	if sourceAccount == nil {
 		utils.ResNotFound(ctx, fmt.Sprintf("账号[%s]不存在", sourceAccountNo))
 		return
 	}
-	targetAccount := accountService.GetByNo(targetAccountNo)
+	targetAccount := accountService.Get(targetAccountNo)
 	if targetAccount == nil {
 		utils.ResNotFound(ctx, fmt.Sprintf("账号[%s]不存在", targetAccountNo))
 		return
