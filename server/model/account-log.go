@@ -58,16 +58,16 @@ type AccountLog struct {
 	ChangeType      AccountChangeType // 流水交易类型，0 创建账户，>0 为收入类型，<0 为支出类型，自定义
 	ChangeFlag      AccountChangeFlag // 交易变化标识：-1 出账 1为进账，枚举
 	Status          TransferredStatus // 交易状态：
-	Decs            string            // 交易描述
+	Desc            string            // 交易描述
 }
 
 // 转账对象
 type AccountTransferDTO struct {
 	TradeBody   Account           `validate:"required"`         // 交易主体
 	TradeTarget Account           `validate:"required"`         // 交易对象
-	AmountStr   string            `validate:"required,numeric"` // 交易金额,该交易涉及的金额
 	Amount      decimal.Decimal   ``                            // 交易金额,该交易涉及的金额
 	ChangeType  AccountChangeType `validate:"required,numeric"` // 流水交易类型，0 创建账户，>0 为收入类型，<0 为支出类型，自定义
 	ChangeFlag  AccountChangeFlag `validate:"required,numeric"` // 交易变化标识：-1 出账 1为进账，枚举
-	Decs        string            ``                            // 交易描述
+	Desc        string            ``                            // 交易描述
+	TradeNo     string            // 交易单号 全局不重复字符或数字，唯一性标识
 }

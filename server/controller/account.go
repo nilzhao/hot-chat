@@ -9,7 +9,6 @@ import (
 	"red-server/utils"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
@@ -85,12 +84,10 @@ func (c *Account) Transfer(ctx *gin.Context) {
 		utils.ResFailed(ctx, err)
 		return
 	}
-	amount, err := decimal.NewFromString(transferDto.AmountStr)
 	if err != nil {
 		utils.ResFailed(ctx, err)
 		return
 	}
-	transferDto.Amount = amount
 	transferDto.TradeBody = *sourceAccount
 	transferDto.TradeTarget = *targetAccount
 	// 验证参数

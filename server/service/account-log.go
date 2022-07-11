@@ -16,23 +16,23 @@ func NewAccountLogService(db *gorm.DB) *AccountLogService {
 	return &AccountLogService{db}
 }
 
-func createLogNo() string {
+func (s *AccountLogService) createLogNo() string {
 	return ksuid.New().Next().String()
 }
 
-func createTradeNo() string {
+func (s *AccountLogService) createTradeNo() string {
 	return ksuid.New().Next().String()
 }
 
 // 创建账户时的日志
 func (s *AccountLogService) GenerateAccountCreatingLog(account *model.Account) model.AccountLog {
-	logNo := createLogNo()
+	logNo := s.createLogNo()
 	accountLog := model.AccountLog{
 		LogNo:           logNo,
 		AccountNo:       account.AccountNo,
 		UserId:          account.UserId,
 		Username:        account.Username,
-		TradeNo:         createTradeNo(),
+		TradeNo:         logNo,
 		TargetAccountNo: account.AccountNo,
 		TargetUserId:    account.UserId,
 		TargetUsername:  account.Username,
@@ -40,7 +40,7 @@ func (s *AccountLogService) GenerateAccountCreatingLog(account *model.Account) m
 		Balance:         account.Balance,
 		ChangeType:      model.ACCOUNT_CREATED,
 		ChangeFlag:      model.FLAG_ACCOUNT_CREATED,
-		Decs:            "账户创建",
+		Desc:            "账户创建",
 	}
 	return accountLog
 }
@@ -50,11 +50,15 @@ func (s *AccountLogService) GenerateAccountTransferringLog(
 	status model.TransferredStatus,
 	balance decimal.Decimal,
 ) *model.AccountLog {
-	logNo := createLogNo()
+	logNo := s.createLogNo()
+	tradeNo := dto.TradeNo
+	if tradeNo == "" {
+		tradeNo = s.createTradeNo()
+	}
 	// 创建流水记录
 	accountLog := &model.AccountLog{
 		LogNo:           logNo,
-		TradeNo:         createTradeNo(),
+		TradeNo:         tradeNo,
 		AccountNo:       dto.TradeBody.AccountNo,
 		UserId:          dto.TradeBody.UserId,
 		Username:        dto.TradeBody.Username,
@@ -66,7 +70,7 @@ func (s *AccountLogService) GenerateAccountTransferringLog(
 		ChangeType:      dto.ChangeType,
 		ChangeFlag:      dto.ChangeFlag,
 		Status:          status,
-		Decs:            dto.Decs,
+		Desc:            dto.Desc,
 	}
 	return accountLog
 }

@@ -20,7 +20,7 @@ func NewAccountDaoService(db *gorm.DB) *AccountDaoService {
 func (s *AccountDaoService) GetOne(accountNo string) *model.Account {
 	account := &model.Account{}
 	result := s.db.Where("account_no = ?", accountNo).Find(account)
-	if result.Error != nil {
+	if result.RowsAffected == 0 || result.Error != nil {
 		global.Logger.Error(result.Error)
 		return nil
 	}

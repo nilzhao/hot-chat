@@ -29,6 +29,7 @@ func (s *GinStarter) Setup() {
 	api.Use(middleware.Auth())
 	controller.NewAccountController().RegisterRoute(api)
 	controller.NewEnvelopeGoodsController().RegisterRoute(api)
+	controller.NewEnvelopeGoodsItemController().RegisterRoute(api)
 }
 
 func (s *GinStarter) Start() {

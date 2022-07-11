@@ -9,9 +9,14 @@ import (
 type EnvelopeType int
 
 const (
-	ENVELOPE_TYPE_GENERAL EnvelopeType = 1
-	ENVELOPE_TYPE_LUCKY   EnvelopeType = 2
+	ENVELOPE_TYPE_GENERAL EnvelopeType = 1 // 普通红包
+	ENVELOPE_TYPE_LUCKY   EnvelopeType = 2 // 碰运气红包
 )
+
+var EnvelopeTypeDic = map[EnvelopeType]string{
+	ENVELOPE_TYPE_GENERAL: "普通红包",
+	ENVELOPE_TYPE_LUCKY:   "碰运气红包",
+}
 
 type EnvelopeStatus int
 

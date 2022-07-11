@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"red-server/global"
 	"red-server/model"
@@ -71,7 +72,8 @@ func (s *EnvelopeGoodsService) SendOut(goods *model.EnvelopeGoods) (*model.Envel
 	systemAccountNo := global.CONFIG.System.Account.AccountNo
 	target := accountService.Get(systemAccountNo)
 	if target == nil {
-		return nil, fmt.Errorf("系统账户 %s 不存在", systemAccountNo)
+		global.Logger.Error(fmt.Errorf("系统账户 %s 不存在", systemAccountNo))
+		return nil, errors.New("内部错误")
 	}
 	dto := &model.AccountTransferDTO{
 		TradeBody:   *body,
@@ -79,7 +81,7 @@ func (s *EnvelopeGoodsService) SendOut(goods *model.EnvelopeGoods) (*model.Envel
 		Amount:      goods.Amount,
 		ChangeType:  model.ENVELOPE_OUTGOING,
 		ChangeFlag:  model.FLAG_TRANSFER_OUT,
-		Decs:        "红包支出",
+		Desc:        "红包支出",
 	}
 	status, err := accountService.Transfer(dto)
 	if status != model.TRANSFERRED_STATUS_SUCCESS || err != nil {
