@@ -27,6 +27,7 @@ func (s *GinStarter) Setup() {
 	api := s.engine.Group("/api/v1")
 	controller.NewAuthController().RegisterRoute(api)
 	api.Use(middleware.Auth())
+	controller.NewUserController().RegisterRoute(api)
 	controller.NewAccountController().RegisterRoute(api)
 	controller.NewEnvelopeGoodsController().RegisterRoute(api)
 	controller.NewEnvelopeGoodsItemController().RegisterRoute(api)

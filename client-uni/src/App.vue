@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from "@dcloudio/uni-app";
-import "./style/common/index.scss";
+import "./style/index.scss";
+import { useAuthStore } from "./stores/auth";
 
 onLaunch(() => {
-  console.log("App Launch");
+  const authStore = useAuthStore();
+  authStore.getCurrentUser();
 });
 
 onShow(() => {
@@ -14,4 +16,3 @@ onHide(() => {
   console.log("App Hide");
 });
 </script>
-<style></style>

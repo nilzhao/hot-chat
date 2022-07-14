@@ -13,6 +13,12 @@
       }
     },
     {
+      "path": "pages/red-envelope/index",
+      "style": {
+        "navigationBarTitleText": "红包"
+      }
+    },
+    {
       "path": "pages/user/profile/index",
       "style": {
         "navigationBarTitleText": "GROW-我的"
@@ -39,6 +45,10 @@
       {
         "text": "首页",
         "pagePath": "pages/index/index"
+      },
+      {
+        "text": "红包",
+        "pagePath": "pages/red-envelope/index"
       },
       {
         "text": "我的",

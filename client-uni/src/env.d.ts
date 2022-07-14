@@ -6,3 +6,8 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+// vite defined var
+declare const __API_PORT__: string
+declare const __API_PREFIX__: string
+declare const __PUBLIC_IP__: string

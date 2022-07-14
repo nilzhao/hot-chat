@@ -4,7 +4,7 @@
   "scripts": {
     "dev:app": "uni -p app",
     "dev:custom": "uni -p",
-    "dev:h5": "uni --port=9000",
+    "dev:h5": "uni",
     "dev:h5:ssr": "uni --ssr",
     "dev:mp-alipay": "uni -p mp-alipay",
     "dev:mp-baidu": "uni -p mp-baidu",
@@ -45,6 +45,7 @@
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-3040820220424001",
     "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-3040820220424001",
     "@dcloudio/uni-ui": "^1.4.19",
+    "pinia": "^2.0.16",
     "vue": "^3.2.37",
     "vue-i18n": "^9.1.9",
     "vuex": "^4.0.2"

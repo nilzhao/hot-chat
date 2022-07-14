@@ -1,5 +1,7 @@
 .vscode/
 tmp/
 node_modules/
+dist/
+.hbuilderx/
 
 __debug_bin

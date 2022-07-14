@@ -55,6 +55,7 @@ async function request(options: UniApp.RequestOptions) {
   }
 
   try {
+    // @ts-ignore
     const { data } = await uni.request({
       ...options,
       method,
