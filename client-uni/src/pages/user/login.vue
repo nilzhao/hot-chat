@@ -29,40 +29,36 @@
       </uni-forms>
     </uni-card>
     <uni-popup ref="failMessageRef" type="message" :mask-click="false">
-      <uni-popup-message
-        type="error"
-        :message="errMsg"
-        :duration="2000"
-      />
+      <uni-popup-message type="error" :message="errMsg" :duration="2000" />
     </uni-popup>
   </view>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, getCurrentInstance } from "vue";
-import request from "@/utils/request";
-import { STORAGE_KEYS } from "@/config";
-import { useAuthStore } from "@/stores/auth";
+import { defineComponent, ref, getCurrentInstance } from 'vue';
+import request from '@/utils/request';
+import { STORAGE_KEYS } from '@/config';
+import { useAuthStore } from '@/stores/auth';
 
 const Login = defineComponent({
   setup() {
     const { getCurrentUser } = useAuthStore();
     const formData = ref({
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     });
-    const errMsg = ref('')
+    const errMsg = ref('');
     const failMessageRef = ref(null);
     const submit = async () => {
-      const { ok, data, msg } = await request.post("/login", {
+      const { ok, data, msg } = await request.post('/login', {
         data: formData.value,
       });
       if (ok) {
         uni.setStorageSync(STORAGE_KEYS.token, data.token);
         await getCurrentUser();
-        uni.reLaunch({ url: "/pages/index/index" });
+        uni.reLaunch({ url: '/pages/index/index' });
       } else {
-        errMsg.value = msg
+        errMsg.value = msg;
         failMessageRef.value?.open();
       }
     };

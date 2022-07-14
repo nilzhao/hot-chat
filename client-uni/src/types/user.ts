@@ -4,11 +4,11 @@ export enum UserStatusEnum {
 }
 
 export interface User {
-  id: number
-  status: UserStatusEnum
-  email: string
-  name: string
-  avatar: string
+  id: number;
+  status: UserStatusEnum;
+  email: string;
+  name: string;
+  avatar: string;
 }
 
 export const INIT_USER: User = {
@@ -16,5 +16,5 @@ export const INIT_USER: User = {
   status: UserStatusEnum.NORMAL,
   email: '',
   name: '',
-  avatar: ''
-}
+  avatar: '',
+};

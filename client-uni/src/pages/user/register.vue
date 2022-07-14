@@ -37,14 +37,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref } from 'vue';
 
 const Login = defineComponent({
   setup() {
     const formData = ref({
-      email: "",
-      password: "",
-      name: "",
+      email: '',
+      password: '',
+      name: '',
     });
     const submit = () => {
       console.log(formData.value);

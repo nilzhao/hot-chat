@@ -1,58 +1,58 @@
-import { API_BASE_URL, STORAGE_KEYS } from '@/config'
+import { API_BASE_URL, STORAGE_KEYS } from '@/config';
 
 type BaseRequestOptions = Omit<
   UniApp.RequestOptions,
   'method' | 'url' | 'success' | 'complete' | 'fail'
->
+>;
 
-const SUCCESS_CODE = 0
+const SUCCESS_CODE = 0;
 
 interface RequestOptions extends BaseRequestOptions {
-  routeParams?: Record<string, string | number>
+  routeParams?: Record<string, string | number>;
 }
 
 interface RequestResult<T = any> {
-  ok: boolean
-  data: T
-  msg: string
-  code: number
+  ok: boolean;
+  data: T;
+  msg: string;
+  code: number;
 }
 
 interface Request {
-  <T = any>(options: RequestOptions): Promise<RequestResult<T>>
+  <T = any>(options: RequestOptions): Promise<RequestResult<T>>;
   get<T = any>(
     url: string,
     options?: BaseRequestOptions
-  ): Promise<RequestResult<T>>
+  ): Promise<RequestResult<T>>;
   post<T = any>(
     url: string,
     options?: BaseRequestOptions
-  ): Promise<RequestResult<T>>
+  ): Promise<RequestResult<T>>;
   put<T = any>(
     url: string,
     options?: BaseRequestOptions
-  ): Promise<RequestResult<T>>
+  ): Promise<RequestResult<T>>;
   delete<T = any>(
     url: string,
     options?: BaseRequestOptions
-  ): Promise<RequestResult<T>>
+  ): Promise<RequestResult<T>>;
 }
 
 async function request(options: UniApp.RequestOptions) {
   const method =
-    options.method?.toLocaleUpperCase() as UniApp.RequestOptions['method']
+    options.method?.toLocaleUpperCase() as UniApp.RequestOptions['method'];
   const result: RequestResult<any> = {
     ok: true,
     code: 0,
     msg: '',
     data: null,
-  }
-  const url = `${API_BASE_URL}${options.url}`
+  };
+  const url = `${API_BASE_URL}${options.url}`;
 
   const header = {
     ...options.header,
     'X-Token': uni.getStorageSync(STORAGE_KEYS.token),
-  }
+  };
 
   try {
     // @ts-ignore
@@ -61,25 +61,25 @@ async function request(options: UniApp.RequestOptions) {
       method,
       url,
       header,
-    })
+    });
     if (data.code !== SUCCESS_CODE) {
-      throw new Error(data.msg)
+      throw new Error(data.msg);
     }
     // @ts-ignore
-    Object.assign(result, data)
+    Object.assign(result, data);
   } catch (err) {
-    const error = err as any
+    const error = err as any;
     Object.assign(result, {
       ok: false,
       code: 400,
       msg: error.errMsg || error.message,
-    })
+    });
   }
-  return result
+  return result;
 }
 
-type Method = 'get' | 'post' | 'put' | 'delete'
-const methods: Method[] = ['get', 'post', 'put', 'delete']
+type Method = 'get' | 'post' | 'put' | 'delete';
+const methods: Method[] = ['get', 'post', 'put', 'delete'];
 
 methods.forEach((method) => {
   // @ts-ignore
@@ -88,8 +88,8 @@ methods.forEach((method) => {
       ...options,
       method: method as UniApp.RequestOptions['method'],
       url,
-    })
-  }
-})
+    });
+  };
+});
 
-export default request as Request
+export default request as Request;
