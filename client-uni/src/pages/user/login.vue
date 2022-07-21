@@ -34,42 +34,30 @@
   </view>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, getCurrentInstance } from 'vue';
+<script lang="ts" setup>
+import { ref } from 'vue';
 import request from '@/utils/request';
 import { STORAGE_KEYS } from '@/config';
 import { useAuthStore } from '@/stores/auth';
 
-const Login = defineComponent({
-  setup() {
-    const { getCurrentUser } = useAuthStore();
-    const formData = ref({
-      email: '',
-      password: '',
-    });
-    const errMsg = ref('');
-    const failMessageRef = ref(null);
-    const submit = async () => {
-      const { ok, data, msg } = await request.post('/login', {
-        data: formData.value,
-      });
-      if (ok) {
-        uni.setStorageSync(STORAGE_KEYS.token, data.token);
-        await getCurrentUser();
-        uni.reLaunch({ url: '/pages/index/index' });
-      } else {
-        errMsg.value = msg;
-        failMessageRef.value?.open();
-      }
-    };
-    return {
-      formData,
-      submit,
-      failMessageRef,
-      errMsg,
-    };
-  },
+const { getCurrentUser } = useAuthStore();
+const formData = ref({
+  email: '',
+  password: '',
 });
-
-export default Login;
+const errMsg = ref<string>('');
+const failMessageRef = ref<any>(null);
+const submit = async () => {
+  const { ok, data, msg } = await request.post('/login', {
+    data: formData.value,
+  });
+  if (ok) {
+    uni.setStorageSync(STORAGE_KEYS.token, data.token);
+    await getCurrentUser();
+    uni.reLaunch({ url: '/pages/index/index' });
+  } else {
+    errMsg.value = msg;
+    failMessageRef.value!.open();
+  }
+};
 </script>

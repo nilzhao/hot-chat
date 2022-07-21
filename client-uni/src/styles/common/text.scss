@@ -1,0 +1,9 @@
+.text-center {
+  text-align: center;
+}
+
+@each $size in 12, 14, 16, 18 {
+  .f-#{$size} {
+    font-size: $size * 1px;
+  }
+}

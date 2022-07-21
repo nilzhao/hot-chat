@@ -26,16 +26,15 @@ func (s *EnvelopeGoodsItemService) createItemNo() string {
 func (s *EnvelopeGoodsItemService) Receive(dto *model.RedEnvelopeReceiveDTO) (item *model.EnvelopeGoodsItem, err error) {
 	goodsService := NewEnvelopeGoodsService(global.DB)
 	// 红包订单的详情
-	goods := goodsService.Get(dto.EnvelopeNo)
+	goods := goodsService.GetOne(dto.EnvelopeNo)
 	// 校验剩余数量和金额
 	if goods.RemainQuantity <= 0 || goods.RemainAmount.LessThanOrEqual(decimal.NewFromFloat(0)) {
 		return nil, errors.New("没有足够的红包和金额")
 	}
 	// 使用红包算法,算出红包金额
 	nextAmount := s.getNextAmount(goods)
-	goodsDaoService := NewEnvelopeGoodsDaoService(s.db)
 	// 更新红包订单的数量和金额
-	rowsAffected, err := goodsDaoService.UpdateBalance(goods.EnvelopeNo, nextAmount)
+	rowsAffected, err := goodsService.UpdateBalance(goods.EnvelopeNo, nextAmount)
 	if err != nil {
 		return nil, err
 	}
@@ -46,9 +45,8 @@ func (s *EnvelopeGoodsItemService) Receive(dto *model.RedEnvelopeReceiveDTO) (it
 	item = s.preCreatItem(goods, dto, nextAmount)
 	item.Amount = nextAmount
 	item.PayStatus = model.ENVELOPE_PAY_STATUS_PAYING
-	goodsItemDaoService := NewEnvelopeGoodsItemDaoService(s.db)
 	// 保存单个红包的信息
-	err = goodsItemDaoService.Insert(item)
+	err = s.Insert(item)
 	if err != nil {
 		return nil, err
 	}

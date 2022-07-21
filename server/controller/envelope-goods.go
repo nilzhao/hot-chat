@@ -56,6 +56,18 @@ func (c *EnvelopeGoodsController) SendOut(ctx *gin.Context) {
 	utils.ResOk(ctx, goods)
 }
 
+func (c EnvelopeGoodsController) Find(ctx *gin.Context) {
+	goodsService := service.NewEnvelopeGoodsService(global.DB)
+	user := utils.GetCurrentUser(ctx)
+	list := goodsService.RandomGet(user.Id)
+	if len(list) == 0 {
+		utils.ResFailed(ctx, errors.New("空空如也"))
+		return
+	}
+	utils.ResOk(ctx, list[0])
+}
+
 func (c *EnvelopeGoodsController) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/goods/sendOut", c.SendOut)
+	api.GET("/goods/find", c.Find)
 }

@@ -1,41 +1,40 @@
 <template>
   <view class="container">
     <view class="flex justify-center mb-md">
-      <view class="round">
+      <view class="avatar">
         <image
+          v-if="currentUser.id"
           :src="currentUser.avatar"
-          style="width: 200px; height: 200px; background-color: #eeeeee"
+          class="w-full h-full"
         />
+        <navigator v-else url="/pages/user/login">登录 / 注册</navigator>
       </view>
     </view>
     <button v-if="currentUser.id" type="primary" @click="logout">退出</button>
-    <navigator v-else url="/pages/user/login">
-      <button type="primary">登录/注册</button>
-    </navigator>
   </view>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import { STORAGE_KEYS } from '@/config';
 import { useAuthStore } from '@/stores/auth';
 import { storeToRefs } from 'pinia';
-import { defineComponent } from 'vue';
 
-export default defineComponent({
-  setup() {
-    const authStore = useAuthStore();
-    const { currentUser } = storeToRefs(authStore);
+const authStore = useAuthStore();
+const { currentUser } = storeToRefs(authStore);
 
-    // 退出登录
-    const logout = () => {
-      uni.removeStorageSync(STORAGE_KEYS.token);
-      authStore.resetCurrentUser();
-      // TODO: 请求退出的接口
-    };
-
-    return {
-      currentUser,
-      logout,
-    };
-  },
-});
+// 退出登录
+const logout = () => {
+  uni.removeStorageSync(STORAGE_KEYS.token);
+  authStore.resetCurrentUser();
+  // TODO: 请求退出的接口
+};
 </script>
+
+<style lang="scss" scoped>
+@use '~@/styles/_mixin.scss';
+
+.avatar {
+  @include mixin.avatar(100);
+  background: $uni-color-subtitle;
+  color: white;
+}
+</style>

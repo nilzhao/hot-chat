@@ -23,8 +23,7 @@ func (s *AccountService) GenerateAccountNo() string {
 
 func (s *AccountService) Create(account *model.Account) error {
 	account.AccountNo = s.GenerateAccountNo()
-	accountDaoService := NewAccountDaoService(s.db)
-	return accountDaoService.Insert(account)
+	return s.Insert(account)
 }
 
 // 修正 amount
@@ -52,23 +51,22 @@ func (s *AccountService) Transfer(
 func (s *AccountService) TransferTo(
 	dto *model.AccountTransferDTO,
 ) (status model.TransferredStatus, err error) {
-	accountDaoService := NewAccountDaoService(s.db)
 	accountLogService := NewAccountLogService(s.db)
 	statusFailure := model.TRANSFERRED_STATUS_FAILURE
 	amount := fixTransferAmount(dto)
-	rowsAffected, err := accountDaoService.UpdateBalance(dto.TradeBody.AccountNo, amount)
+	rowsAffected, err := s.UpdateBalance(dto.TradeBody.AccountNo, amount)
 	if err != nil {
 		return statusFailure, err
 	}
 	if rowsAffected <= 0 && dto.ChangeFlag == model.FLAG_TRANSFER_OUT {
 		return model.TRANSFERRED_STATUS_SUFFICIENT_FUNDS, errors.New("余额不足")
 	}
-	account := accountDaoService.GetOne(dto.TradeBody.AccountNo)
+	account := s.GetOne(dto.TradeBody.AccountNo)
 	if account == nil {
 		return statusFailure, errors.New("账户不存在")
 	}
 	accountLog := accountLogService.GenerateAccountTransferringLog(dto, status, account.Balance)
-	err = accountLogService.Create(accountLog)
+	err = accountLogService.Insert(accountLog)
 	if err != nil {
 		return statusFailure, err
 	}
@@ -90,14 +88,4 @@ func (s *AccountService) MayTransferBack(
 		return s.TransferTo(&backDto)
 	}
 	return model.TRANSFERRED_STATUS_SUCCESS, nil
-}
-
-func (s *AccountService) Get(accountNo string) *model.Account {
-	accountDaoService := NewAccountDaoService(s.db)
-	return accountDaoService.GetOne(accountNo)
-}
-
-func (s *AccountService) GetByUserId(userId uint, accountType model.AccountType) *model.Account {
-	accountDaoService := NewAccountDaoService(s.db)
-	return accountDaoService.GetByUserId(userId, accountType)
 }

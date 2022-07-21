@@ -19,7 +19,7 @@ func NewUserController() *UserController {
 func (c *UserController) GetProfile(ctx *gin.Context) {
 	userService := service.NewUserService(global.DB)
 	user := utils.GetCurrentUser(ctx)
-	user = userService.Get(user.Id)
+	user = userService.GetOne(user.Id)
 	if user == nil && !user.DeletedAt.Valid {
 		utils.ResFailed(ctx, errors.New("用户不存在"))
 		return

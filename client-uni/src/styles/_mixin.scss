@@ -1,0 +1,11 @@
+@mixin avatar($size) {
+  width: $size * 1px;
+  height: $size * 1px;
+  border-radius: $size * 1px;
+  text-align: center;
+  & > image {
+    width: $size * 1px;
+    height: $size * 1px;
+    border-radius: $size * 1px;
+  }
+}

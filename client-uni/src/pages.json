@@ -19,6 +19,9 @@
       }
     },
     {
+      "path": "pages/red-envelope/goods-item-list"
+    },
+    {
       "path": "pages/user/profile/index",
       "style": {
         "navigationBarTitleText": "GROW-我的"
@@ -41,18 +44,25 @@
     "color": "#333",
     "selectedColor": "#007aff",
     "backgroundColor": "#fff",
+    "iconWidth": "24px",
     "list": [
       {
         "text": "首页",
-        "pagePath": "pages/index/index"
+        "pagePath": "pages/index/index",
+        "iconPath": "static/image/home.svg",
+        "selectedIconPath": "static/image/home-active.svg"
       },
       {
         "text": "红包",
-        "pagePath": "pages/red-envelope/index"
+        "pagePath": "pages/red-envelope/index",
+        "iconPath": "static/image/money.svg",
+        "selectedIconPath": "static/image/money-active.svg"
       },
       {
         "text": "我的",
-        "pagePath": "pages/user/profile/index"
+        "pagePath": "pages/user/profile/index",
+        "iconPath": "static/image/user.svg",
+        "selectedIconPath": "static/image/user-active.svg"
       }
     ]
   },

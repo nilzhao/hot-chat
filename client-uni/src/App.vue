@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app';
-import './style/index.scss';
+import './styles/index.scss';
 import { useAuthStore } from './stores/auth';
 
 onLaunch(() => {

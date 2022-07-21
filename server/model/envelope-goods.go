@@ -68,4 +68,5 @@ type EnvelopeGoods struct {
 	OrderType        EnvelopeOrderType `json:"orderType"`                    // 订单状态: 发布单/退款单
 	PayStatus        EnvelopePayStatus `json:"payStatus"`                    // 支付状态: 未支付/支付中/已支付/支付失败
 	OriginEnvelopeNo string            `json:"originEnvelopeNo"`             // 原订单编号: 退款订单
+	User             User              `json:"user"`                         // goods
 }

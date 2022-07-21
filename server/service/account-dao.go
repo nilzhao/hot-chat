@@ -6,18 +6,9 @@ import (
 	"red-server/model"
 
 	"github.com/shopspring/decimal"
-	"gorm.io/gorm"
 )
 
-type AccountDaoService struct {
-	db *gorm.DB
-}
-
-func NewAccountDaoService(db *gorm.DB) *AccountDaoService {
-	return &AccountDaoService{db}
-}
-
-func (s *AccountDaoService) GetOne(accountNo string) *model.Account {
+func (s *AccountService) GetOne(accountNo string) *model.Account {
 	account := &model.Account{}
 	result := s.db.Where("account_no = ?", accountNo).Find(account)
 	if result.RowsAffected == 0 || result.Error != nil {
@@ -27,7 +18,7 @@ func (s *AccountDaoService) GetOne(accountNo string) *model.Account {
 	return account
 }
 
-func (s *AccountDaoService) GetByUserId(userId uint, accountType model.AccountType) *model.Account {
+func (s *AccountService) GetByUserId(userId uint, accountType model.AccountType) *model.Account {
 	account := &model.Account{}
 	result := s.db.Where("user_id = ? and type = ?", userId, accountType).Find(account)
 	if result.Error != nil {
@@ -37,7 +28,7 @@ func (s *AccountDaoService) GetByUserId(userId uint, accountType model.AccountTy
 	return account
 }
 
-func (s *AccountDaoService) GetByUserIdAndType(
+func (s *AccountService) GetByUserIdAndType(
 	userId string,
 	accountType model.AccountType,
 ) *model.Account {
@@ -50,7 +41,7 @@ func (s *AccountDaoService) GetByUserIdAndType(
 	return account
 }
 
-func (s *AccountDaoService) Insert(account *model.Account) error {
+func (s *AccountService) Insert(account *model.Account) error {
 	result := s.db.Create(account)
 	if result.Error != nil {
 		return result.Error
@@ -63,7 +54,7 @@ func (s *AccountDaoService) Insert(account *model.Account) error {
 
 // 账户余额的更新
 // amount 如果是负数，就是扣减；如果是正数，就是增加
-func (s *AccountDaoService) UpdateBalance(
+func (s *AccountService) UpdateBalance(
 	accountNo string,
 	amount decimal.Decimal,
 ) (int64, error) {
@@ -83,7 +74,7 @@ func (s *AccountDaoService) UpdateBalance(
 	return result.RowsAffected, result.Error
 }
 
-func (s *AccountDaoService) UpdateStatus(accountNo string, status model.AccountStatus) (int64, error) {
+func (s *AccountService) UpdateStatus(accountNo string, status model.AccountStatus) (int64, error) {
 	result := s.db.Model(model.Account{}).Where("accountNo = ?", accountNo).Update("status", status)
 	return result.RowsAffected, result.Error
 }

@@ -17,8 +17,7 @@ func NewUserService(db *gorm.DB) *UserService {
 
 func (s *UserService) Create(userDto *model.UserCreateDto) (*model.User, error) {
 	password := utils.BcryptHash(userDto.Password)
-	userDaoService := NewUserDaoService(s.db)
-	User := &model.User{
+	user := &model.User{
 		Password: password,
 		Name:     userDto.Name,
 		NickName: userDto.NickName,
@@ -28,17 +27,5 @@ func (s *UserService) Create(userDto *model.UserCreateDto) (*model.User, error) 
 		Avatar:   userDto.Avatar,
 		Birthday: userDto.Birthday,
 	}
-	return User, userDaoService.Insert(User)
-}
-
-func (s *UserService) Get(id uint) *model.User {
-	userDaoService := NewUserDaoService(s.db)
-	user := userDaoService.GetOne(id)
-	return user
-}
-
-func (s *UserService) GetByEmail(email string) *model.User {
-	userDaoService := NewUserDaoService(s.db)
-	user := userDaoService.GetByEmail(email)
-	return user
+	return user, s.Insert(user)
 }

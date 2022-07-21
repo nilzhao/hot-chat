@@ -1,0 +1,25 @@
+.container {
+  padding: 20px;
+}
+
+@each $name, $value in (0, 0px), (xss, 4px), (xs, 8px), (sm, 12px), (md, 16px),
+  (lg, 24px), (xl, 32px), (xxl, 40px)
+{
+  @each $directionName, $directionValue in (t, top), (r, right), (b, bottom),
+    (l, left)
+  {
+    @each $type, $typeValue in (m, margin), (p, padding) {
+      .#{$type}#{$directionName}-#{$name} {
+        #{$typeValue}-#{$directionValue}: $value;
+      }
+      .#{$type}x-#{$name} {
+        #{$typeValue}-left: $value;
+        #{$typeValue}-right: $value;
+      }
+      .#{$type}y-#{$name} {
+        #{$typeValue}-top: $value;
+        #{$typeValue}-bottom: $value;
+      }
+    }
+  }
+}

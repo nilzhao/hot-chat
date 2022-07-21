@@ -39,7 +39,7 @@ func (c *Account) Create(ctx *gin.Context) {
 		}
 		// 生成日志
 		accountLog := accountLogService.GenerateAccountCreatingLog(account)
-		err = accountLogService.Create(&accountLog)
+		err = accountLogService.Insert(&accountLog)
 		if err != nil {
 			return err
 		}
@@ -54,7 +54,7 @@ func (c *Account) Create(ctx *gin.Context) {
 
 func (c *Account) Detail(ctx *gin.Context) {
 	accountService := service.NewAccountService(global.DB)
-	account := accountService.Get(ctx.Param("accountNo"))
+	account := accountService.GetOne(ctx.Param("accountNo"))
 	if account == nil {
 		utils.ResNotFound(ctx)
 		return
@@ -67,12 +67,12 @@ func (c *Account) Transfer(ctx *gin.Context) {
 	accountService := service.NewAccountService(global.DB)
 	sourceAccountNo := ctx.Param("accountNo")
 	targetAccountNo := ctx.Param("targetAccountNo")
-	sourceAccount := accountService.Get(sourceAccountNo)
+	sourceAccount := accountService.GetOne(sourceAccountNo)
 	if sourceAccount == nil {
 		utils.ResNotFound(ctx, fmt.Sprintf("账号[%s]不存在", sourceAccountNo))
 		return
 	}
-	targetAccount := accountService.Get(targetAccountNo)
+	targetAccount := accountService.GetOne(targetAccountNo)
 	if targetAccount == nil {
 		utils.ResNotFound(ctx, fmt.Sprintf("账号[%s]不存在", targetAccountNo))
 		return

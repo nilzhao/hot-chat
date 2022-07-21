@@ -74,8 +74,3 @@ func (s *AccountLogService) GenerateAccountTransferringLog(
 	}
 	return accountLog
 }
-
-func (s *AccountLogService) Create(accountLog *model.AccountLog) error {
-	accountLogDaoService := NewAccountLogDaoService(s.db)
-	return accountLogDaoService.Insert(accountLog)
-}

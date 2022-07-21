@@ -5,3 +5,4 @@ dist/
 .hbuilderx/
 
 __debug_bin
+yarn-error.log

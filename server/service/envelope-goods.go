@@ -24,15 +24,9 @@ func createEnvelopeNo() string {
 	return ksuid.New().Next().String()
 }
 
-func (s *EnvelopeGoodsService) Get(envelopeNo string) *model.EnvelopeGoods {
-	envelopeGoodsDao := NewEnvelopeGoodsDaoService(s.db)
-	return envelopeGoodsDao.GetOne(envelopeNo)
-}
-
 func (s *EnvelopeGoodsService) Create(goods *model.EnvelopeGoods) error {
 	goods = s.GenerateCreatingGoods(goods)
-	envelopeGoodsDao := NewEnvelopeGoodsDaoService(s.db)
-	return envelopeGoodsDao.Insert(goods)
+	return s.Insert(goods)
 }
 
 // 生成红包订单
@@ -65,12 +59,12 @@ func (s *EnvelopeGoodsService) SendOut(goods *model.EnvelopeGoods) (*model.Envel
 	// 2. 从红包发送人的资金账户中扣减红包金额 ，把红包金额从红包发送人的资金账户里扣除
 	accountService := NewAccountService(s.db)
 
-	body := accountService.Get(goods.AccountNo)
+	body := accountService.GetOne(goods.AccountNo)
 	if body == nil {
 		return nil, fmt.Errorf("账户 %s 不存在", goods.AccountNo)
 	}
 	systemAccountNo := global.CONFIG.System.Account.AccountNo
-	target := accountService.Get(systemAccountNo)
+	target := accountService.GetOne(systemAccountNo)
 	if target == nil {
 		global.Logger.Error(fmt.Errorf("系统账户 %s 不存在", systemAccountNo))
 		return nil, errors.New("内部错误")

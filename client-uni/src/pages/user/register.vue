@@ -36,25 +36,15 @@
   </uni-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script lang="ts" setup>
+import { ref } from 'vue';
 
-const Login = defineComponent({
-  setup() {
-    const formData = ref({
-      email: '',
-      password: '',
-      name: '',
-    });
-    const submit = () => {
-      console.log(formData.value);
-    };
-    return {
-      formData,
-      submit,
-    };
-  },
+const formData = ref({
+  email: '',
+  password: '',
+  name: '',
 });
-
-export default Login;
+const submit = () => {
+  console.log(formData.value);
+};
 </script>
