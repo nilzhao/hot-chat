@@ -42,8 +42,7 @@
           class="detail-btn"
         >
           <text>查看领取详情</text>
-          <uni-icons size="14" color="#fed983" type="forward" />
-          <uni-icons size="14" color="#fed983" type="forward" />
+          <text class="iconfont icon-doubleright" />
         </navigator>
       </view>
     </uni-popup>
@@ -201,5 +200,7 @@ $yellow: #fed983;
 
 .detail-btn {
   color: $yellow;
+  height: 20px;
+  line-height: 20px;
 }
 </style>

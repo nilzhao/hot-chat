@@ -49,20 +49,20 @@
       {
         "text": "首页",
         "pagePath": "pages/index/index",
-        "iconPath": "static/image/home.svg",
-        "selectedIconPath": "static/image/home-active.svg"
+        "iconPath": "static/image/home.png",
+        "selectedIconPath": "static/image/home-active.png"
       },
       {
         "text": "红包",
         "pagePath": "pages/red-envelope/index",
-        "iconPath": "static/image/money.svg",
-        "selectedIconPath": "static/image/money-active.svg"
+        "iconPath": "static/image/money.png",
+        "selectedIconPath": "static/image/money-active.png"
       },
       {
         "text": "我的",
         "pagePath": "pages/user/profile/index",
-        "iconPath": "static/image/user.svg",
-        "selectedIconPath": "static/image/user-active.svg"
+        "iconPath": "static/image/user.png",
+        "selectedIconPath": "static/image/user-active.png"
       }
     ]
   },

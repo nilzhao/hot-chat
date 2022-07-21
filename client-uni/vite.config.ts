@@ -3,7 +3,6 @@ import uni from '@dcloudio/vite-plugin-uni';
 import { join } from 'path';
 import { networkInterfaces } from 'os';
 import vueTypeImports from 'vite-plugin-vue-type-imports';
-import vueJsx from '@vitejs/plugin-vue-jsx';
 
 const API_PORT = 9000;
 const API_PREFIX = '/api/v1';
@@ -27,7 +26,7 @@ const pathJoin = (dir: string) => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [uni(), vueJsx(), vueTypeImports()],
+  plugins: [uni(), vueTypeImports()],
   envPrefix: 'GROW_',
   define: {
     __API_PREFIX__: JSON.stringify(API_PREFIX),
