@@ -21,7 +21,7 @@ func (s *EnvelopeGoodsService) Insert(envelopeGoods *model.EnvelopeGoods) error 
 
 func (s *EnvelopeGoodsService) GetOne(envelopeNo string) *model.EnvelopeGoods {
 	envelopeGoods := &model.EnvelopeGoods{}
-	result := s.db.First(envelopeGoods, "envelope_no = ?", envelopeNo)
+	result := s.db.Preload("User").First(envelopeGoods, "envelope_no = ?", envelopeNo)
 	if result.Error != nil {
 		global.Logger.Error(result.Error)
 		return nil

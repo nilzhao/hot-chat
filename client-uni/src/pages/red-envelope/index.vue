@@ -12,31 +12,36 @@
           src="/static/image/lantern.png"
           mode="aspectFit"
         />
-        <view class="from">[{{ goods?.username }}]的红包</view>
-        <view class="bless">{{ goods?.blessing || '恭喜发财 大吉大利' }}</view>
         <Avatar
           :src="goods!.user!.avatar"
           :text="goods!.user!.name"
           :width="80"
-          class="mb-lg"
+          class="mb-sm"
         />
-        <view v-if="status === StatusEnum.FOUND" class="open-btn">
-          <view class="open-text" @click="openEnvelope">开</view>
-          <view class="open-border"> </view>
-        </view>
-        <view v-if="status > StatusEnum.FOUND">
-          <view v-if="status === StatusEnum.OPEN_OK">
-            <view class="amount">
-              <text>88.88</text>
-              <text class="unit">元</text>
+        <view class="from">[{{ goods?.username }}]的红包</view>
+        <view class="bless">{{ goods?.blessing || DEFAULT_BLESSING }}</view>
+        <view class="info">
+          <template v-if="status === StatusEnum.FOUND">
+            <view @click="openEnvelope" class="open-btn">
+              <view class="open-text">開</view>
+            </view>
+            <view class="open-border"> </view>
+          </template>
+
+          <view v-if="status > StatusEnum.FOUND">
+            <view v-if="status === StatusEnum.OPEN_OK">
+              <view class="amount">
+                <text>{{ formatAmount(goodsItem?.amount) }}</text>
+                <text class="unit">元</text>
+              </view>
+            </view>
+            <view v-if="status === StatusEnum.OPEN_FAILED">
+              <text>很遗憾,您没有抢到</text>
             </view>
           </view>
-          <view v-if="status === StatusEnum.OPEN_FAILED"
-            >很遗憾,您没有抢到</view
-          >
         </view>
         <navigator
-          url="/pages/red-envelope/goods-item-list"
+          :url="`/pages/red-envelope/goods-item-list?envelopeNo=${goods?.envelopeNo}`"
           open-type="navigate"
           hover-class="navigator-hover"
           class="detail-btn"
@@ -55,6 +60,8 @@ import { ref } from 'vue';
 import { reqFindEnvelope, reqReceiveEnvelopeItem } from './services';
 import { EnvelopeGoodsWithUser, EnvelopeGoodsItem } from './types';
 import Avatar from '@/components/avatar/index.vue';
+import { DEFAULT_BLESSING } from '@/config';
+import { formatAmount } from '@/utils/num';
 
 enum StatusEnum {
   INIT = 0,
@@ -73,12 +80,16 @@ const findEnvelope = async () => {
     title: '打捞中...',
   });
   const { ok, data } = await reqFindEnvelope();
+  uni.hideLoading();
   if (ok) {
     goods.value = data;
     goodsRef.value!.open();
     status.value = StatusEnum.FOUND;
+  } else {
+    uni.showModal({
+      title: '空空如也~',
+    });
   }
-  uni.hideLoading();
 };
 // 打开红包
 const openEnvelope = async () => {
@@ -105,6 +116,9 @@ const sendEnvelope = () => {};
 $red: #e13130;
 $yellow: #fed983;
 
+$info-height: 120px;
+$info-padding: 10px;
+
 .goods {
   width: 320px;
   padding: 20px;
@@ -116,6 +130,7 @@ $yellow: #fed983;
   background: $red;
   overflow: hidden;
   position: relative;
+  color: $yellow;
 }
 
 .lantern {
@@ -132,8 +147,6 @@ $yellow: #fed983;
 }
 
 .from {
-  font-size: 18px;
-  color: $yellow;
   margin-bottom: 16px;
   text-align: center;
   position: relative;
@@ -142,30 +155,36 @@ $yellow: #fed983;
 
 .bless {
   text-align: center;
-  font-size: 14px;
-  color: $yellow;
-  margin-bottom: 24px;
+  font-size: 16px;
+  margin-bottom: 100px;
 }
 
 .avatar {
   @include mixin.avatar(80);
 }
 
+.info {
+  height: $info-height;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
 .open-btn {
-  padding: 10px;
+  padding: $info-padding;
   border-radius: 100%;
   background: $yellow;
   margin-bottom: 20px;
-  display: inline-block;
 }
 
 .open-text {
-  $width: 100px;
+  $width: $info-height - $info-padding * 2;
   font-size: 60px;
+  color: $red;
   width: $width;
   height: $width;
   line-height: $width;
-  color: $red;
   font-weight: bold;
   border-radius: 100%;
   border: 3px solid $red;
@@ -175,22 +194,22 @@ $yellow: #fed983;
 }
 
 .open-border {
+  $width: 1000px;
   position: absolute;
-  width: 1000px;
-  height: 1000px;
-  border-radius: 1000px;
+  width: $width;
+  height: $width;
+  border-radius: $width;
   border: 2px solid $yellow;
   left: 50%;
-  bottom: 120px;
+  bottom: $info-height * 0.5;
   transform: translate(-50%, 0);
   z-index: 0;
 }
 
 .amount {
-  color: $yellow;
   font-size: 40px;
   font-weight: bold;
-  margin-right: -22px;
+  margin-right: -20px;
 }
 
 .unit {
@@ -199,8 +218,7 @@ $yellow: #fed983;
 }
 
 .detail-btn {
-  color: $yellow;
-  height: 20px;
-  line-height: 20px;
+  display: flex;
+  align-items: center;
 }
 </style>

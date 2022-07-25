@@ -4,7 +4,13 @@ import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
   state: () => {
-    return { currentUser: INIT_USER };
+    return {
+      currentUser: INIT_USER,
+      network: {
+        type: '',
+        isConnected: true,
+      },
+    };
   },
   actions: {
     async getCurrentUser() {

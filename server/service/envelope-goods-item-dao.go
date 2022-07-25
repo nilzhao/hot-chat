@@ -17,3 +17,12 @@ func (s *EnvelopeGoodsItemService) Insert(item *model.EnvelopeGoodsItem) error {
 	}
 	return nil
 }
+
+func (s *EnvelopeGoodsItemService) ListByEnvelopeNo(envelopeNo string) []*model.EnvelopeGoodsItem {
+	items := []*model.EnvelopeGoodsItem{}
+	result := s.db.Where("envelope_no = ?", envelopeNo).Preload("RecvUser").Find(&items)
+	if result.Error != nil {
+		global.Logger.Error(result.Error)
+	}
+	return items
+}

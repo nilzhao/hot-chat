@@ -18,6 +18,17 @@ func NewEnvelopeGoodsController() *EnvelopeGoodsController {
 	return &EnvelopeGoodsController{}
 }
 
+func (c *EnvelopeGoodsController) Detail(ctx *gin.Context) {
+	envelopeNo := ctx.Param("envelopeNo")
+	envelopeService := service.NewEnvelopeGoodsService(global.DB)
+	goods := envelopeService.GetOne(envelopeNo)
+	if goods == nil {
+		utils.ResNotFound(ctx)
+		return
+	}
+	utils.ResOk(ctx, goods)
+}
+
 func (c *EnvelopeGoodsController) SendOut(ctx *gin.Context) {
 	goods := &model.EnvelopeGoods{}
 	user := utils.GetCurrentUser(ctx)
@@ -67,7 +78,15 @@ func (c EnvelopeGoodsController) Find(ctx *gin.Context) {
 	utils.ResOk(ctx, list[0])
 }
 
+func (c EnvelopeGoodsController) Items(ctx *gin.Context) {
+	itemService := service.NewEnvelopeGoodsItemService(global.DB)
+	items := itemService.ListByEnvelopeNo(ctx.Param("envelopeNo"))
+	utils.ResOk(ctx, items)
+}
+
 func (c *EnvelopeGoodsController) RegisterRoute(api *gin.RouterGroup) {
 	api.POST("/goods/sendOut", c.SendOut)
 	api.GET("/goods/find", c.Find)
+	api.GET("/goods/:envelopeNo/items", c.Items)
+	api.GET("/goods/:envelopeNo", c.Detail)
 }

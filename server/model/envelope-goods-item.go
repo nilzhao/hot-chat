@@ -13,6 +13,7 @@ type EnvelopeGoodsItem struct {
 	AccountNo    string            `json:"accountNo"`
 	PayStatus    EnvelopePayStatus `json:"payStatus"`
 	Desc         string            `json:"desc"`
+	RecvUser     User              `json:"recvUser" gorm:"foreignKey:RecvUserId"`
 }
 
 type RedEnvelopeReceiveDTO struct {

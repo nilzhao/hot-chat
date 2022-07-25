@@ -17,3 +17,5 @@ export const API_BASE_URL = (() => {
 export const STORAGE_KEYS = {
   token: 'token',
 };
+
+export const DEFAULT_BLESSING = '恭喜发财 大吉大利';

@@ -42,3 +42,7 @@ export interface EnvelopeGoodsItem {
   remainAmount: string;
   updatedAt: string;
 }
+
+export interface EnvelopeGoodsItemWithUser extends EnvelopeGoodsItem {
+  recvUser: User;
+}
