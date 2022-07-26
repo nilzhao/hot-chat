@@ -1,9 +1,15 @@
-.text-center {
-  text-align: center;
+@each $position in left, center, right {
+  .text-#{$position} {
+    text-align: $position;
+  }
 }
 
 @each $size in 12, 14, 16, 18 {
   .f-#{$size} {
     font-size: $size * 1px;
   }
+}
+
+.text-white {
+  color: $uni-text-color-inverse;
 }

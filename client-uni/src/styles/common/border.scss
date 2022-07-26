@@ -1,4 +1,28 @@
+.border-none {
+  border: none !important;
+}
+
+.border-bottom {
+  border-bottom: 1px solid $uni-border-color;
+}
+
 .round {
   border-radius: 100%;
   overflow: hidden;
+}
+
+.radius {
+  border-radius: $uni-border-radius-base;
+}
+
+.radius-sm {
+  border-radius: $uni-border-radius-sm;
+}
+
+.radius-lg {
+  border-radius: $uni-border-radius-lg;
+}
+
+.radius-circle {
+  border-radius: $uni-border-radius-circle;
 }

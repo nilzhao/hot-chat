@@ -19,6 +19,12 @@
       }
     },
     {
+      "path": "pages/red-envelope/send-out",
+      "style": {
+        "navigationBarTitleText": "发红包"
+      }
+    },
+    {
       "path": "pages/red-envelope/goods-item-list"
     },
     {

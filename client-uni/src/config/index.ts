@@ -18,4 +18,4 @@ export const STORAGE_KEYS = {
   token: 'token',
 };
 
-export const DEFAULT_BLESSING = '恭喜发财 大吉大利';
+export const DEFAULT_BLESSING = '恭喜发财,大吉大利';

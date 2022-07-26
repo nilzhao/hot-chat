@@ -1,5 +1,10 @@
 import { User } from '@/types/user';
 
+export const enum EnvelopeGoodsTypeEnum {
+  GENERAL = 1, // 普通红包
+  LUCKY = 2, // 碰运气红包
+}
+
 export interface EnvelopeGoods {
   accountNo: string;
   amount: string;
@@ -17,7 +22,7 @@ export interface EnvelopeGoods {
   remainAmount: string;
   remainQuantity: number;
   status: number;
-  type: number;
+  type: EnvelopeGoodsTypeEnum;
   updatedAt: string;
   userId: number;
   username: string;
@@ -45,4 +50,12 @@ export interface EnvelopeGoodsItem {
 
 export interface EnvelopeGoodsItemWithUser extends EnvelopeGoodsItem {
   recvUser: User;
+}
+
+export interface EnvelopeToSendOut {
+  amount?: number;
+  quantity: number;
+  amountOne?: number;
+  type: EnvelopeGoodsTypeEnum;
+  blessing: string;
 }

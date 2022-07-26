@@ -3,6 +3,7 @@ import {
   EnvelopeGoodsWithUser,
   EnvelopeGoodsItem,
   EnvelopeGoodsItemWithUser,
+  EnvelopeGoodsTypeEnum,
 } from './types';
 
 // 红包详情
@@ -21,3 +22,14 @@ export const reqReceiveEnvelopeItem = (envelopeNo: string) =>
 // 红包领取详情
 export const reqEnvelopeItems = (envelopeNo: string) =>
   request.get<EnvelopeGoodsItemWithUser[]>(`/goods/${envelopeNo}/items`);
+
+// 红包领取详情
+export const reqSendOutEnvelope = (data: {
+  type?: EnvelopeGoodsTypeEnum;
+  amount?: number;
+  amountOne?: number;
+  quantity?: number;
+}) =>
+  request.post<EnvelopeGoodsWithUser[]>(`/goods/sendOut`, {
+    data,
+  });

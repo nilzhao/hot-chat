@@ -1,6 +1,6 @@
 <template>
   <view class="">
-    <uni-popup ref="goodsRef">
+    <uni-popup ref="goodsPopupRef">
       <view class="goods">
         <image
           class="lantern"
@@ -73,7 +73,8 @@ enum StatusEnum {
 const goods = ref<EnvelopeGoodsWithUser | null>(null);
 const goodsItem = ref<EnvelopeGoodsItem | null>(null);
 const status = ref<number>(StatusEnum.INIT);
-const goodsRef = ref<any>(null);
+const goodsPopupRef = ref<any>(null);
+const sendPopupRef = ref<any>(null);
 // 打捞红包
 const findEnvelope = async () => {
   uni.showLoading({
@@ -83,7 +84,7 @@ const findEnvelope = async () => {
   uni.hideLoading();
   if (ok) {
     goods.value = data;
-    goodsRef.value!.open();
+    goodsPopupRef.value!.open();
     status.value = StatusEnum.FOUND;
   } else {
     uni.showModal({
@@ -106,8 +107,11 @@ const openEnvelope = async () => {
   }
   uni.hideLoading();
 };
+
 // 发红包
-const sendEnvelope = () => {};
+const sendEnvelope = async () => {
+  uni.navigateTo({ url: '/pages/red-envelope/send-out' });
+};
 </script>
 
 <style lang="scss" scoped>
