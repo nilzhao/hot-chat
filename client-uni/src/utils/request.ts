@@ -57,6 +57,7 @@ async function request(options: UniApp.RequestOptions) {
   try {
     // @ts-ignore
     const { data } = await uni.request({
+      timeout: 5000,
       ...options,
       method,
       url,

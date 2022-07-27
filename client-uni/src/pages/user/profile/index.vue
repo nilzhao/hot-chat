@@ -1,7 +1,7 @@
 <template>
   <view class="container">
-    <view class="flex justify-center mb-md">
-      <view class="avatar">
+    <view class="flex-center mb-md">
+      <view class="avatar flex-center">
         <image
           v-if="currentUser.id"
           :src="currentUser.avatar"

@@ -1,0 +1,12 @@
+@use '~@/styles/_var.scss';
+
+.back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 24px;
+  width: var.$uni-page-head-height;
+  height: var.$uni-page-head-height;
+  text-align: center;
+  line-height: var.$uni-page-head-height;
+}
