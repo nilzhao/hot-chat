@@ -1,21 +1,44 @@
 <template>
-  <view class="form-item">
-    <text class="label">{{ props.label }}</text>
+  <view
+    :class="
+      classNames(styles.wrapper, props.class, styles[props.layout], {
+        [styles['is-focused']]: isFocused,
+        [styles['is-empty']]: isEmpty,
+        [styles['is-not-empty']]: !isEmpty,
+      })
+    "
+  >
+    <text :class="classNames(styles.label, props.labelClass)">
+      {{ props.label }}
+    </text>
     <input
-      class="input text-right"
+      :class="classNames(styles.input, props.inputClass)"
       :type="props.type"
       :value="props.modelValue"
       :placeholder="props.placeholder"
       @input="handleInput"
+      @focus="handleFocus"
+      @blur="handleBlur"
     />
   </view>
 </template>
 
 <script lang="ts" setup>
 import { InputProps } from './types';
+import classNames from 'classnames';
+import { computed, ref } from 'vue';
+import styles from './index.module.scss';
 
-const props = defineProps<InputProps>();
-const emit = defineEmits(['update:modelValue']);
+const props = withDefaults(defineProps<InputProps>(), {
+  layout: 'vertical',
+});
+const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
+
+const isFocused = ref(false);
+const isEmpty = computed(() => {
+  return [null, undefined, ''].includes(props.modelValue);
+});
+
 const handleInput = (e: any) => {
   let val = e.detail.value;
 
@@ -24,21 +47,13 @@ const handleInput = (e: any) => {
   }
   emit('update:modelValue', val);
 };
-</script>
 
-<style lang="scss" scoped>
-.form-item {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid $uni-border-color;
-  margin-bottom: 20px;
-  padding: 8px 0px;
-  .label {
-    margin-right: 12px;
-  }
-  .input {
-    flex: 1;
-    font-size: 14px;
-  }
-}
-</style>
+const handleFocus = (e: Event) => {
+  isFocused.value = true;
+  emit('focus', e);
+};
+const handleBlur = (e: Event) => {
+  isFocused.value = false;
+  emit('blur', e);
+};
+</script>

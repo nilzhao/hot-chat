@@ -10,15 +10,15 @@
   {
     @each $type, $typeValue in (m, margin), (p, padding) {
       .#{$type}#{$directionName}-#{$name} {
-        #{$typeValue}-#{$directionValue}: $value;
+        #{$typeValue}-#{$directionValue}: $value !important;
       }
       .#{$type}x-#{$name} {
-        #{$typeValue}-left: $value;
-        #{$typeValue}-right: $value;
+        #{$typeValue}-left: $value !important;
+        #{$typeValue}-right: $value !important;
       }
       .#{$type}y-#{$name} {
-        #{$typeValue}-top: $value;
-        #{$typeValue}-bottom: $value;
+        #{$typeValue}-top: $value !important;
+        #{$typeValue}-bottom: $value !important;
       }
     }
   }

@@ -3,14 +3,21 @@ body {
   font-size: 14px;
 }
 
-image {
-  border: 0;
-  vertical-align: middle;
-}
+#app {
+  image {
+    border: 0;
+    vertical-align: middle;
+  }
 
-view,
-text,
-image,
-navigator {
-  box-sizing: border-box;
+  view,
+  text,
+  image,
+  navigator {
+    box-sizing: border-box;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
+  }
 }

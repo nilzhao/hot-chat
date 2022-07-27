@@ -4,7 +4,7 @@
   }
 }
 
-@each $size in 12, 14, 16, 18 {
+@each $size in 12, 14, 16, 18, 34 {
   .f-#{$size} {
     font-size: $size * 1px;
   }
