@@ -10,6 +10,6 @@ type SystemConfig struct {
 
 type SystemAccount struct {
 	AccountNo string `json:"accountNo" yaml:"accountNo"`
-	UserId    uint   `json:"userId" yaml:"userId"`
+	UserId    int64  `json:"userId" yaml:"userId"`
 	Username  string `json:"username" yaml:"username"`
 }

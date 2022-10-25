@@ -55,7 +55,7 @@ type EnvelopeGoods struct {
 	EnvelopeNo       string            `json:"envelopeNo"`               // 红包编号
 	Type             EnvelopeType      `json:"type" validate:"required"` // 红包类型:普通红包/碰运气红包
 	AccountNo        string            `json:"accountNo"`                // 红包所属账户
-	UserId           uint              `json:"userId" `
+	UserId           int64             `json:"userId" `
 	Username         string            `json:"username"`
 	Amount           decimal.Decimal   `json:"amount"`                       // 总金额
 	AmountOne        decimal.Decimal   `json:"amountOne"`                    // 普通红包单个红包金额

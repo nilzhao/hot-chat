@@ -45,7 +45,7 @@ func (s *EnvelopeGoodsService) UpdateBalance(envelopeNo string, amount decimal.D
 }
 
 // 随机返回
-func (s *EnvelopeGoodsService) RandomGet(userId uint, limits ...int) []*model.EnvelopeGoods {
+func (s *EnvelopeGoodsService) RandomGet(userId int64, limits ...int) []*model.EnvelopeGoods {
 	limit := 1
 	if len(limits) > 0 {
 		limit = limits[0]

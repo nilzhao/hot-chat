@@ -25,7 +25,7 @@ type Account struct {
 	AccountNo    string          `json:"accountNo" gorm:"uniqueIndex"` // 账户编号,账户唯一标识
 	Type         AccountType     `json:"type" validate:"required"`     // 账户类型，用来区分不同类型的账户：积分账户、会员卡账户、钱包账户、红包账户
 	CurrencyCode string          `json:"currencyCode"`                 // 货币类型编码：CNY人民币，EUR欧元，USD美元 。。。
-	UserId       uint            `json:"userId"`                       // 用户编号, 账户所属用户
+	UserId       int64           `json:"userId"`                       // 用户编号, 账户所属用户
 	Username     string          `json:"username"`                     // 用户名称
 	Balance      decimal.Decimal `json:"balance"`                      // 账户可用余额
 	Status       AccountStatus   `json:"status"`                       // 账户状态，账户状态：0账户初始化，1启用，2停用

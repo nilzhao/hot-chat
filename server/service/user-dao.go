@@ -17,7 +17,7 @@ func (s *UserService) Insert(user *model.User) error {
 	return nil
 }
 
-func (s *UserService) GetOne(id uint) *model.User {
+func (s *UserService) GetOne(id int64) *model.User {
 	user := &model.User{}
 	result := s.db.First(user, id)
 	if result.Error != nil {

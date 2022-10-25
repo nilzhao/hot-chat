@@ -18,7 +18,7 @@ func (s *AccountService) GetOne(accountNo string) *model.Account {
 	return account
 }
 
-func (s *AccountService) GetByUserId(userId uint, accountType model.AccountType) *model.Account {
+func (s *AccountService) GetByUserId(userId int64, accountType model.AccountType) *model.Account {
 	account := &model.Account{}
 	result := s.db.Where("user_id = ? and type = ?", userId, accountType).Find(account)
 	if result.Error != nil {
