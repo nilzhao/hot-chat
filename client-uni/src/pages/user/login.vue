@@ -45,9 +45,8 @@
       <view v-if="isLoginMode" @click="mode = 'register'">还没有账号?注册</view>
       <view v-else @click="mode = 'login'">已有账号?登录</view>
     </view>
-
-    <uni-popup ref="failMessageRef" type="message" :mask-click="false">
-      <uni-popup-message type="error" :message="errMsg" :duration="2000" />
+    <uni-popup ref="failMessageRef" :type="info.type" :mask-click="false">
+      <uni-popup-message type="error" :message="info.msg" :duration="2000" />
     </uni-popup>
   </view>
 </template>

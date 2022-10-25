@@ -28,6 +28,7 @@ import { InputProps } from './types';
 import classNames from 'classnames';
 import { computed, ref } from 'vue';
 import styles from './index.module.scss';
+import { isNilEmpty } from '@/utils';
 
 const props = withDefaults(defineProps<InputProps>(), {
   layout: 'vertical',
@@ -36,7 +37,7 @@ const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
 const isFocused = ref(false);
 const isEmpty = computed(() => {
-  return [null, undefined, ''].includes(props.modelValue);
+  return isNilEmpty(props.modelValue);
 });
 
 const handleInput = (e: any) => {
@@ -52,6 +53,7 @@ const handleFocus = (e: Event) => {
   isFocused.value = true;
   emit('focus', e);
 };
+
 const handleBlur = (e: Event) => {
   isFocused.value = false;
   emit('blur', e);
