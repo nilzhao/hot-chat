@@ -15,7 +15,7 @@
 </template>
 <script lang="ts" setup>
 import { STORAGE_KEYS } from '@/config';
-import { useAuthStore } from '@/stores/auth';
+import useAuthStore from '@/stores/auth';
 import { storeToRefs } from 'pinia';
 
 const authStore = useAuthStore();

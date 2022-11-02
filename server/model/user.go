@@ -30,7 +30,7 @@ type User struct {
 	Status   UserStatus     `json:"status"`
 }
 
-type UserCreateDto struct {
+type UserDto struct {
 	Name     string         `json:"name"`
 	NickName string         `json:"nickName"`
 	Password string         `json:"password" validate:"required,gte=6"`
@@ -40,3 +40,5 @@ type UserCreateDto struct {
 	Phone    string         `json:"phone"`
 	Birthday gorm.DeletedAt `json:"birthday"`
 }
+
+type Users []User

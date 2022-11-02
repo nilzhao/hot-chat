@@ -22,26 +22,26 @@ func (s *ContactService) IsMyContact(targetId int64, contactType model.ContactTy
 }
 
 func (s *ContactService) IsMyFriend(friendId int64) bool {
-	return s.IsMyContact(friendId, model.ContactTypeFriend)
+	return s.IsMyContact(friendId, model.CONTACT_TYPE_FRIEND)
 }
 
 func (s *ContactService) IsMyCommunity(communityId int64) bool {
-	return s.IsMyContact(communityId, model.ContactTypeCommunity)
+	return s.IsMyContact(communityId, model.CONTACT_TYPE_COMMUNITY)
 }
 
 // 互相的朋友
 func (s *ContactService) IsFriend(userId1, userId2 int64) bool {
 	contact := model.Contact{}
-	result := s.db.Where("(owner_id = ? AND target_id = ?) OR (owner_id = ? AND target_id = ?) AND type = ?", userId1, userId2, userId2, userId1, model.ContactTypeFriend).First(&contact)
+	result := s.db.Where("(owner_id = ? AND target_id = ?) OR (owner_id = ? AND target_id = ?) AND type = ?", userId1, userId2, userId2, userId1, model.CONTACT_TYPE_FRIEND).First(&contact)
 	if result.Error != nil {
 		global.Logger.Error(result.Error)
 	}
 	return contact.Id != 0
 }
 
-func (s *ContactService) GetAllByOwnerId(ownerId int64) []*model.Contact {
+func (s *ContactService) GetByOwnerId(ownerId int64) []*model.Contact {
 	contacts := []*model.Contact{}
-	result := s.db.Where("owner_id = ?", ownerId).Find(&contacts)
+	result := s.db.Model(&model.Contact{}).Where("owner_id = ?", ownerId).Preload("TargetUser").Find(&contacts)
 	if result.Error != nil {
 		global.Logger.Error(result.Error)
 	}

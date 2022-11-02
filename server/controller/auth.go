@@ -18,7 +18,7 @@ func NewAuthController() *AuthController {
 
 // 用户注册
 func (c *AuthController) Register(ctx *gin.Context) {
-	userDto := &model.UserCreateDto{}
+	userDto := &model.UserDto{}
 	err := ctx.ShouldBind(userDto)
 	if err != nil {
 		utils.ResFailed(ctx, err)
@@ -41,7 +41,7 @@ func (c *AuthController) Register(ctx *gin.Context) {
 // 登录
 func (c *AuthController) Login(ctx *gin.Context) {
 	userService := service.NewUserService(global.DB)
-	userDto := &model.UserCreateDto{}
+	userDto := &model.UserDto{}
 	err := ctx.ShouldBind(userDto)
 	if err != nil {
 		utils.ResFailed(ctx, err)

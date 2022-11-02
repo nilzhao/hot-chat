@@ -32,6 +32,7 @@ func (s *GinStarter) Setup() {
 	controller.NewEnvelopeGoodsController().RegisterRoute(api)
 	controller.NewEnvelopeGoodsItemController().RegisterRoute(api)
 	controller.NewContactController().RegisterRoute(api)
+	controller.NewChatController().RegisterRoute(api)
 }
 
 func (s *GinStarter) Start() {

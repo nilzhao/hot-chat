@@ -8,9 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func getToken(ctx *gin.Context) string {
+	const tokenKey = "X-Token"
+	token := ctx.Request.Header.Get(tokenKey)
+	if token == "" {
+		token = ctx.Query(tokenKey)
+	}
+	return token
+}
+
 func Auth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("X-Token")
+		token := getToken(ctx)
 		if token == "" {
 			utils.ResFailed(ctx, errors.New("请先登录"), utils.CODE_UNAUTHORIZED)
 			ctx.Abort()

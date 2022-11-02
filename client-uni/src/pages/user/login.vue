@@ -55,7 +55,7 @@
 import { computed, ref, watch } from 'vue';
 import request from '@/utils/request';
 import { STORAGE_KEYS } from '@/config';
-import { useAuthStore } from '@/stores/auth';
+import useAuthStore from '@/stores/auth';
 import Input from '@/components/input/index.vue';
 import GoBack from '@/components/go-back/index.vue';
 

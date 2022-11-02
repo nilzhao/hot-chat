@@ -2,7 +2,7 @@ import { INIT_USER } from '@/types/user';
 import request from '@/utils/request';
 import { defineStore } from 'pinia';
 
-export const useAuthStore = defineStore('auth', {
+const useAuthStore = defineStore('auth', {
   state: () => {
     return {
       currentUser: INIT_USER,
@@ -12,11 +12,18 @@ export const useAuthStore = defineStore('auth', {
       },
     };
   },
+  getters: {
+    isLogin: (state) => !!(state.currentUser && state.currentUser.id),
+  },
   actions: {
     async getCurrentUser() {
       const { ok, data } = await request.get('/user/profile');
       if (ok) {
         this.currentUser = data;
+      } else {
+        uni.reLaunch({
+          url: '/pages/user/login',
+        });
       }
     },
     resetCurrentUser() {
@@ -24,3 +31,5 @@ export const useAuthStore = defineStore('auth', {
     },
   },
 });
+
+export default useAuthStore;

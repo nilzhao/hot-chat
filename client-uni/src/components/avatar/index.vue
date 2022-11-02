@@ -1,11 +1,7 @@
-<template>
-  <view :style="style" :class="[props.className, 'avatar']">
-    <image :style="style" :src="props.src || draw(props.text)"></image>
-  </view>
-</template>
 <script lang="ts">
 const DEFAULT_WIDTH: number = 80;
 </script>
+
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { AvatarProps } from './types';
@@ -52,6 +48,13 @@ const draw = (text?: string): string => {
   return cvs.toDataURL('image/jpeg', 1);
 };
 </script>
+
+<template>
+  <view :style="style" :class="[props.className, 'avatar']">
+    <image :style="style" :src="props.src || draw(props.text)" />
+  </view>
+</template>
+
 <style lang="scss" scoped>
 .avatar {
   border-radius: 100%;

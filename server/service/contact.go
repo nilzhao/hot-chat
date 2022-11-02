@@ -31,7 +31,7 @@ func (s *ContactService) AddFriend(friendId int64) (contact *model.Contact, err 
 	err = s.Insert(&model.Contact{
 		OwnerId:  currentUser.Id,
 		TargetId: friendId,
-		Type:     model.ContactTypeFriend,
+		Type:     model.CONTACT_TYPE_FRIEND,
 	})
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (s *ContactService) AddFriend(friendId int64) (contact *model.Contact, err 
 	err = s.Insert(&model.Contact{
 		OwnerId:  friendId,
 		TargetId: currentUser.Id,
-		Type:     model.ContactTypeFriend,
+		Type:     model.CONTACT_TYPE_FRIEND,
 	})
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func (s *ContactService) AddFriend(friendId int64) (contact *model.Contact, err 
 	return contact, err
 }
 
-func (s *ContactService) AddCommunity(communityId int64) (contact *model.Contact, err error) {
+func (s *ContactService) JoinCommunity(communityId int64) (contact *model.Contact, err error) {
 	isIn := s.IsMyCommunity(communityId)
 	if isIn {
 		err = errors.New("已在群组之中,不可重复添加")
@@ -58,7 +58,7 @@ func (s *ContactService) AddCommunity(communityId int64) (contact *model.Contact
 	err = s.Insert(&model.Contact{
 		OwnerId:  currentUser.Id,
 		TargetId: communityId,
-		Type:     model.ContactTypeCommunity,
+		Type:     model.CONTACT_TYPE_COMMUNITY,
 	})
 	if err != nil {
 		return nil, err
@@ -68,5 +68,5 @@ func (s *ContactService) AddCommunity(communityId int64) (contact *model.Contact
 
 func (s *ContactService) GetMyContacts() []*model.Contact {
 	currentUser := utils.GetCurrentUser(s.ctx)
-	return s.GetAllByOwnerId(currentUser.Id)
+	return s.GetByOwnerId(currentUser.Id)
 }

@@ -2,6 +2,10 @@
   display: flex;
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 .justify-center {
   justify-content: center;
 }
@@ -18,4 +22,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-column {
+  flex-direction: column;
 }

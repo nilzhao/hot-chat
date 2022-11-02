@@ -60,6 +60,7 @@
     "classnames": "^2.3.1",
     "lodash": "^4.17.21",
     "pinia": "^2.0.16",
+    "pinyin-pro": "^3.11.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

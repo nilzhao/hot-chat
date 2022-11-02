@@ -9,7 +9,13 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "GROW-首页"
+        "navigationBarTitleText": "首页"
+      }
+    },
+    {
+      "path": "pages/contact/index",
+      "style": {
+        "navigationBarTitleText": "通讯录"
       }
     },
     {
@@ -39,6 +45,13 @@
         "navigationBarTitleText": "登录",
         "titleNView": false
       }
+    },
+    {
+      "path": "pages/chat/index",
+      "style": {
+        "navigationBarTitleText": "聊天窗口",
+        "titleNView": false
+      }
     }
   ],
   "tabBar": {
@@ -54,8 +67,8 @@
         "selectedIconPath": "static/image/home-active.png"
       },
       {
-        "text": "红包",
-        "pagePath": "pages/red-envelope/index",
+        "text": "通讯录",
+        "pagePath": "pages/contact/index",
         "iconPath": "static/image/money.png",
         "selectedIconPath": "static/image/money-active.png"
       },

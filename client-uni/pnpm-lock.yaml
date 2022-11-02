@@ -25,6 +25,7 @@ specifiers:
   lint-staged: ^13.0.3
   lodash: ^4.17.21
   pinia: ^2.0.16
+  pinyin-pro: ^3.11.0
   prettier: ^2.7.1
   sass: ^1.53.0
   sass-loader: ^13.0.2
@@ -50,6 +51,7 @@ dependencies:
   classnames: 2.3.1
   lodash: 4.17.21
   pinia: 2.0.17_j6bzmzd4ujpabbp5objtwxyjp4
+  pinyin-pro: 3.11.0
   vue: 3.2.37
 
 devDependencies:
@@ -429,7 +431,7 @@ packages:
       postcss-selector-parser: 6.0.10
       qrcode-reader: 1.0.4
       qrcode-terminal: 0.12.0
-      ws: 8.8.1
+      ws: 8.10.0
     transitivePeerDependencies:
       - bufferutil
       - postcss
@@ -2371,6 +2373,10 @@ packages:
       vue-demi: 0.13.6_vue@3.2.37
     dev: false
 
+  /pinyin-pro/3.11.0:
+    resolution: {integrity: sha512-l2JDFyEIMdTIyff3OkuoSIJCpYTwrxrR2KuMyGMjdNEcHGcEVSKIEb7mvKEKOhJaZLp2FB++Jax+MD0BWafbhg==}
+    dev: false
+
   /postcss-import/14.1.0:
     resolution: {integrity: sha512-flwI+Vgm4SElObFVPpTIT7SU7R3qk2L7PyduMcokiaVKuWv9d/U+Gm/QAd8NDLuykTWTkcrjOeD2Pp1rMeBTGw==}
     engines: {node: '>=10.0.0'}
@@ -2961,8 +2967,8 @@ packages:
       strip-ansi: 6.0.1
     dev: true
 
-  /ws/8.8.1:
-    resolution: {integrity: sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==}
+  /ws/8.10.0:
+    resolution: {integrity: sha512-+s49uSmZpvtAsd2h37vIPy1RBusaLawVe8of+GyEPsaJTCMpj/2v8NpeK1SHXjBlQ95lQTmQofOJnFiLoaN3yw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
