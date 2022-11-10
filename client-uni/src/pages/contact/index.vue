@@ -1,30 +1,13 @@
 <script lang="ts" setup>
-import { reqContacts } from '@/services/contact';
-import { ContactDetail } from '@/types/contact';
-import { groupBy, map, orderBy, pick, sortBy } from 'lodash';
-import { computed, onMounted, ref } from 'vue';
+import { groupBy, orderBy, pick, sortBy } from 'lodash';
+import { computed } from 'vue';
 import { pinyin } from 'pinyin-pro';
+import useContactStore from '@/stores/contact';
 
-const contactList = ref<ContactDetail[]>([]);
-
-const getContacts = async () => {
-  const { ok, data } = await reqContacts();
-
-  if (!ok) {
-    contactList.value = [];
-    return;
-  }
-  console.log(data);
-
-  contactList.value = data;
-};
-
-onMounted(() => {
-  getContacts();
-});
+const { contacts } = useContactStore();
 
 const contactData = computed(() => {
-  const groupedContacts = groupBy(contactList.value, (contact) => {
+  const groupedContacts = groupBy(contacts, (contact) => {
     return pinyin(contact.targetUser.name)[0];
   });
   const letterContacts = Object.entries(groupedContacts)
@@ -42,10 +25,10 @@ const contactData = computed(() => {
 
 const options = computed(() => {
   return Object.entries(groupBy(contactData.value, 'letter')).map(
-    ([letter, contacts]) => {
+    ([letter, list]) => {
       return {
         letter,
-        data: contacts.map((contact) => contact.targetUser.name),
+        data: list.map((contact) => contact.targetUser.name),
       };
     }
   );

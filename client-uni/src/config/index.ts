@@ -19,3 +19,6 @@ export const STORAGE_KEYS = {
 };
 
 export const DEFAULT_BLESSING = '恭喜发财,大吉大利';
+
+// 聊天消息最大存储数量
+export const CHAT_MESSAGE_LIMIT = 100;

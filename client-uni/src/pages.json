@@ -7,9 +7,9 @@
   },
   "pages": [
     {
-      "path": "pages/index/index",
+      "path": "pages/chat-list/index",
       "style": {
-        "navigationBarTitleText": "首页"
+        "navigationBarTitleText": "热聊"
       }
     },
     {
@@ -61,8 +61,8 @@
     "iconWidth": "24px",
     "list": [
       {
-        "text": "首页",
-        "pagePath": "pages/index/index",
+        "text": "热聊",
+        "pagePath": "pages/chat-list/index",
         "iconPath": "static/image/home.png",
         "selectedIconPath": "static/image/home-active.png"
       },

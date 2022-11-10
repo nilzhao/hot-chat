@@ -7,9 +7,11 @@ import (
 	"red-server/global"
 	"red-server/utils"
 	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/segmentio/ksuid"
 )
 
 type MessageCmd int
@@ -37,16 +39,17 @@ type Node struct {
 }
 
 type Message struct {
-	Id       int64      `json:"id,omitempty" form:"id"`             // 消息ID
-	UserId   int64      `json:"userId,omitempty" form:"userId"`     // 谁发的
-	Cmd      MessageCmd `json:"cmd,omitempty" form:"cmd"`           // 群聊还是私聊
-	TargetId int64      `json:"targetId,omitempty" form:"targetId"` // 对端用户ID/群ID
-	Media    int        `json:"media,omitempty" form:"media"`       // 消息按照什么样式展示
-	Content  string     `json:"content,omitempty" form:"content"`   // 消息的内容
-	Pic      string     `json:"pic,omitempty" form:"pic"`           // 预览图片
-	Url      string     `json:"url,omitempty" form:"url"`           // 服务的URL
-	Memo     string     `json:"memo,omitempty" form:"memo"`         // 简单描述
-	Amount   int        `json:"amount,omitempty" form:"amount"`     // 其他和数字相关的
+	Id        string     `json:"id,omitempty" form:"id"`             // 消息ID
+	UserId    int64      `json:"userId,omitempty" form:"userId"`     // 谁发的
+	Cmd       MessageCmd `json:"cmd,omitempty" form:"cmd"`           // 群聊还是私聊
+	TargetId  int64      `json:"targetId,omitempty" form:"targetId"` // 对端用户ID/群ID
+	Media     int        `json:"media,omitempty" form:"media"`       // 消息按照什么样式展示
+	Content   string     `json:"content,omitempty" form:"content"`   // 消息的内容
+	Pic       string     `json:"pic,omitempty" form:"pic"`           // 预览图片
+	Url       string     `json:"url,omitempty" form:"url"`           // 服务的URL
+	Memo      string     `json:"memo,omitempty" form:"memo"`         // 简单描述
+	Amount    int        `json:"amount,omitempty" form:"amount"`     // 其他和数字相关的
+	CreatedAt time.Time  `json:"createdAt"`
 }
 
 type ChatController struct {
@@ -58,6 +61,10 @@ func NewChatController() *ChatController {
 	return &ChatController{
 		clientMap: make(map[int64]*Node, 0),
 	}
+}
+
+func createMessageId() string {
+	return ksuid.New().Next().String()
 }
 
 func (c *ChatController) Chat(ctx *gin.Context) {
@@ -101,7 +108,7 @@ func (c *ChatController) recvProc(node *Node) {
 			return
 		}
 		c.dispatch(data)
-		fmt.Printf("接收消息: %s", data)
+		fmt.Printf("接收消息: %s\n", data)
 	}
 }
 
@@ -114,9 +121,12 @@ func (c *ChatController) dispatch(data []byte) {
 		return
 	}
 
+	msg.Id = createMessageId()
+	msg.CreatedAt = time.Now()
+
 	switch msg.Cmd {
 	case MESSAGE_CMD_SINGLE:
-		c.sendMsg(msg.TargetId, data)
+		c.sendMsg(msg)
 	case MESSAGE_CMD_ROOM:
 		// 群聊消息
 	case MESSAGE_CMD_HEART:
@@ -124,13 +134,24 @@ func (c *ChatController) dispatch(data []byte) {
 	}
 }
 
-func (c *ChatController) sendMsg(userId int64, data []byte) {
+func (c *ChatController) sendMsg(msg Message) {
 	c.rwLocker.RLock()
-	node, ok := c.clientMap[userId]
-	c.rwLocker.RUnlock()
-	if ok {
-		node.DataQueue <- data
+	defer c.rwLocker.RUnlock()
+	node, ok := c.clientMap[msg.TargetId]
+	if !ok {
+		return
 	}
+	currentNode, ok := c.clientMap[msg.UserId]
+	if !ok {
+		return
+	}
+	data, err := json.Marshal(msg)
+	if err != nil {
+		global.Logger.Error(err)
+		return
+	}
+	node.DataQueue <- data
+	currentNode.DataQueue <- data
 }
 
 func (c *ChatController) RegisterRoute(api *gin.RouterGroup) {

@@ -4,28 +4,51 @@ import Avatar from '@/components/avatar/index.vue';
 import useAuthStore from '@/stores/auth';
 import useWsStore from '@/stores/ws';
 import { Message, MessageCmdEnum, MessageMediaEnum } from '@/types/chat';
-import { nextTick, ref, watch } from 'vue';
-import { last, trim } from 'lodash';
+import { nextTick, onMounted, ref, watch } from 'vue';
+import { trim } from 'lodash';
 import { onLoad } from '@dcloudio/uni-app';
 import { User } from '@/types/user';
+import useContactStore from '@/stores/contact';
+import CacheChat from '@/utils/cache-chat';
+import GoBack from '@/components/go-back/index.vue';
 
 const authStore = useAuthStore();
+const contactStore = useContactStore();
 const wsStore = useWsStore();
 
 const messageList = ref<Message[]>([]);
 const content = ref('');
-const targetInfo = ref<User | null>();
+const targetInfo = ref<User | null>(null);
 const scrollTop = ref(0);
 
 onLoad((option) => {
-  const targetParam = JSON.parse(decodeURIComponent(option.targetInfo || ''));
-  if (!targetParam) {
-    uni.redirectTo({
+  const redirectToHome = () => {
+    uni.switchTab({
       url: '/pages/index/index',
     });
-    return;
+  };
+  try {
+    const targetParam = JSON.parse(decodeURIComponent(option.targetInfo || ''));
+    if (!targetParam) {
+      redirectToHome();
+      return;
+    }
+    targetInfo.value = targetParam;
+  } catch (err) {
+    redirectToHome();
   }
-  targetInfo.value = targetParam;
+});
+
+onMounted(async () => {
+  // 从缓存中获取聊天记录
+  const cacheChat = new CacheChat(
+    authStore.currentUser,
+    contactStore.contactsMap
+  );
+  messageList.value = await cacheChat.getTargetMessageList(
+    MessageCmdEnum.SINGLE,
+    targetInfo.value!.id
+  );
 });
 
 const scrollToBottom = () => {
@@ -34,8 +57,6 @@ const scrollToBottom = () => {
     query.select('#message-scroll-view').boundingClientRect();
     query.select('#message-list-view').boundingClientRect();
     query.exec((ret) => {
-      console.log(ret);
-
       if (ret[1].height > ret[0].height) {
         scrollTop.value = ret[1].height - ret[0].height;
       }
@@ -48,7 +69,7 @@ watch(
   (newMsg) => {
     if (!newMsg) return;
 
-    messageList.value.push({ id: Date.now(), ...newMsg });
+    messageList.value.push({ ...newMsg });
     wsStore.newMsg = null;
   }
 );
@@ -73,22 +94,9 @@ const send = () => {
   if (!val) return;
 
   wsStore.sendText({
-    targetId: targetInfo.value?.id,
+    targetId: targetInfo.value!.id,
     content: val,
     cmd: MessageCmdEnum.SINGLE,
-  });
-
-  messageList.value.push({
-    id: Date.now(),
-    userId: authStore.currentUser.id,
-    targetId: targetInfo.value?.id,
-    media: MessageMediaEnum.TEXT,
-    content: val,
-    cmd: MessageCmdEnum.SINGLE,
-    pic: '',
-    url: '',
-    memo: '',
-    amount: 0,
   });
   content.value = '';
 };
@@ -96,7 +104,12 @@ const send = () => {
 
 <template>
   <view class="wrapper">
-    <view class="header">{{ targetInfo?.name }}</view>
+    <view class="header">
+      <GoBack />
+      <view>
+        {{ targetInfo?.name }}
+      </view>
+    </view>
 
     <view class="body">
       <scroll-view
@@ -165,6 +178,7 @@ const send = () => {
 .header {
   height: 40px;
   padding: 10px;
+  text-align: center;
 }
 
 .body {

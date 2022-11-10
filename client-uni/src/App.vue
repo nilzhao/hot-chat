@@ -4,18 +4,25 @@ import './styles/index.scss';
 import useAuthStore from './stores/auth';
 import useWsStore from './stores/ws';
 import { watch } from 'vue';
+import useContactStore from './stores/contact';
 
 onLaunch(() => {
   const authStore = useAuthStore();
+  const contactStore = useContactStore();
   const wsStore = useWsStore();
 
   authStore.getCurrentUser();
 
+  // 登录后 连接 websocket
   watch(
     () => authStore.isLogin,
-    (isLogin) => {
+    async (isLogin) => {
       if (!isLogin) return;
-      wsStore.init();
+      await contactStore.getContacts();
+      wsStore.init({
+        currentUser: authStore.currentUser,
+        contactsMap: contactStore.contactsMap,
+      });
     }
   );
 

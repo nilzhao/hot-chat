@@ -13,7 +13,7 @@ export enum MessageMediaEnum {
 }
 
 export interface Message {
-  id: number;
+  id: string;
   userId: number;
   cmd: number;
   targetId: number;
@@ -23,4 +23,13 @@ export interface Message {
   url: string;
   memo: string;
   amount: number;
+  createdAt: string;
+}
+
+export interface Chat {
+  note: string;
+  updatedAt: string;
+  avatar: string;
+  name: string;
+  targetId: number;
 }

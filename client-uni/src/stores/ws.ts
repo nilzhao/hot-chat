@@ -2,6 +2,10 @@ import { STORAGE_KEYS } from '@/config';
 import { Message, MessageMediaEnum } from '@/types/chat';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import useAuthStore from './auth';
+import CacheChat from '@/utils/cache-chat';
+import { User } from '@/types/user';
+import { ContactDetail } from '@/types/contact';
 
 export enum WsStatusEnum {
   WAITING = 'waiting',
@@ -13,31 +17,51 @@ export enum WsStatusEnum {
 const useWsStore = defineStore('ws', () => {
   const status = ref<WsStatusEnum>(WsStatusEnum.WAITING);
   const newMsg = ref<Message | null>(null);
-  let ws: WebSocket;
+  let ws: UniApp.SocketTask;
 
-  const init = (url?: string) => {
+  const init = ({
+    url,
+    currentUser,
+    contactsMap,
+  }: {
+    url?: string;
+    currentUser: User;
+    contactsMap: Map<number, ContactDetail>;
+  }) => {
     if (ws) return;
-    ws = new WebSocket(
-      url ||
+    const cacheChat = new CacheChat(currentUser, contactsMap);
+    ws = uni.connectSocket({
+      url:
+        url ||
         `ws://127.0.0.1:9000${__API_PREFIX__}/ws?X-Token=${uni.getStorageSync(
           STORAGE_KEYS.token
-        )}`
-    );
+        )}`,
+      complete: () => {},
+    });
 
-    ws.addEventListener('open', () => {
+    ws.onOpen(() => {
       status.value = WsStatusEnum.CONNECTED;
     });
 
-    ws.addEventListener('error', (e: WebSocketEventMap['error']) => {
+    ws.onError((e: UniApp.GeneralCallbackResult) => {
       status.value = WsStatusEnum.ERROR;
       console.dir(e);
     });
 
-    ws.addEventListener('message', (e: WebSocketEventMap['message']) => {
-      newMsg.value = JSON.parse(e.data);
+    ws.onMessage(async (e: UniApp.OnSocketMessageCallbackResult) => {
+      if (typeof e.data !== 'string') return;
+      try {
+        const data: Message = JSON.parse(e.data);
+        console.log('receive message', data);
+
+        newMsg.value = data;
+        cacheChat.cacheOnReceivedMessage(data);
+      } catch (e) {
+        console.log('消息解析失败:', e);
+      }
     });
 
-    ws.addEventListener('close', () => {
+    ws.onClose(() => {
       status.value = WsStatusEnum.CLOSED;
     });
   };
@@ -46,9 +70,19 @@ const useWsStore = defineStore('ws', () => {
     return status.value === WsStatusEnum.CONNECTED;
   });
 
-  const send = (data: Partial<Message>) => {
+  const send = async (data: Partial<Message>) => {
     if (!isConnected.value) return;
-    ws.send(JSON.stringify(data));
+    const { currentUser } = useAuthStore();
+    const message = {
+      ...data,
+      userId: currentUser.id,
+    } as Message;
+    ws.send({
+      data: JSON.stringify(message),
+      success() {
+        console.log('send success');
+      },
+    });
   };
 
   const sendText = (data: Partial<Message>) => {
