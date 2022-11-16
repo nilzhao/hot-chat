@@ -50,6 +50,8 @@ type Message struct {
 	Memo      string     `json:"memo,omitempty" form:"memo"`         // 简单描述
 	Amount    int        `json:"amount,omitempty" form:"amount"`     // 其他和数字相关的
 	CreatedAt time.Time  `json:"createdAt"`
+	Width     int        `json:"width,omitempty" form:"width"`
+	Height    int        `json:"height,omitempty" form:"height"`
 }
 
 type ChatController struct {

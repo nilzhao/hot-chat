@@ -11,7 +11,7 @@ interface RequestOptions extends BaseRequestOptions {
   routeParams?: Record<string, string | number>;
 }
 
-interface RequestResult<T = any> {
+export interface RequestResult<T = any> {
   ok: boolean;
   data: T;
   msg: string;

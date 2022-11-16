@@ -6,3 +6,5 @@ dist/
 
 __debug_bin
 yarn-error.log
+
+server/static

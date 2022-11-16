@@ -11,6 +11,9 @@ import { User } from '@/types/user';
 import useContactStore from '@/stores/contact';
 import CacheChat from '@/utils/cache-chat';
 import GoBack from '@/components/go-back/index.vue';
+import classNames from 'classnames';
+import { updateFile } from '@/services/upload';
+import { getArrayValue } from '@/utils';
 
 const authStore = useAuthStore();
 const contactStore = useContactStore();
@@ -100,6 +103,26 @@ const send = () => {
   });
   content.value = '';
 };
+
+const handleAttachmentClick = () => {
+  uni.chooseImage({
+    count: 1,
+    success: async (res) => {
+      console.log(res);
+
+      const { data } = await updateFile(getArrayValue(res.tempFilePaths));
+      if (data) {
+        wsStore.sendImg({
+          targetId: targetInfo.value!.id,
+          content: data.path,
+          cmd: MessageCmdEnum.SINGLE,
+          width: data.width,
+          height: data.height,
+        });
+      }
+    },
+  });
+};
 </script>
 
 <template>
@@ -144,7 +167,17 @@ const send = () => {
                 </view>
                 <view class="message-card">
                   <view class="message-blank" />
-                  <view class="message-content">{{ messageData.content }}</view>
+                  <view class="message-content">
+                    <image
+                      v-if="messageData.media === MessageMediaEnum.IMG"
+                      :src="`/api/v1/${messageData.content}`"
+                      :style="`width: 200px;`"
+                      mode="widthFix"
+                    />
+                    <text v-else>
+                      {{ messageData.content }}
+                    </text>
+                  </view>
                 </view>
               </view>
             </view>
@@ -153,15 +186,37 @@ const send = () => {
       </scroll-view>
     </view>
 
-    <view class="bottom">
+    <view class="footer">
+      <view
+        class="item iconfont icon-attachment"
+        @click="handleAttachmentClick"
+      />
+      <view class="item iconfont icon-emoji" />
       <textarea
         auto-height
-        class="input"
+        class="input mx-xss"
         placeholder="文明交流"
         v-model="content"
         @comfirm="send"
       />
-      <button size="mini" class="send-btn" @click="send">发送</button>
+      <view class="item iconfont icon-voice" />
+      <view class="item send-more">
+        <view
+          :class="
+            classNames('iconfont icon-send transition-fast text-primary', {
+              'fade slide-right': !content,
+            })
+          "
+          @click="send"
+        />
+        <view
+          :class="
+            classNames('iconfont icon-plus transition-fast', {
+              'fade slide-left': !!content,
+            })
+          "
+        />
+      </view>
     </view>
   </view>
 </template>
@@ -186,11 +241,13 @@ const send = () => {
   flex: 1;
   .list {
     position: absolute;
-    left: 10px;
-    top: 10px;
-    right: 10px;
-    bottom: 10px;
-    width: auto;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+  }
+  #message-list-view {
+    padding: 20px 10px;
   }
 }
 
@@ -209,6 +266,7 @@ $prefix: message;
 .#{$prefix}-avatar {
   $size: 40px;
   width: $size;
+  min-width: $size;
   height: $size;
   border-radius: 100%;
   background: grey;
@@ -219,7 +277,7 @@ $prefix: message;
 }
 .#{$prefix}-card {
   display: flex;
-  flex-wrap: no-wrap;
+  flex-wrap: nowrap;
 }
 .#{$prefix}-blank {
   $width: 16px;
@@ -275,23 +333,43 @@ $prefix: message;
   }
 }
 
-.bottom {
+.footer {
+  $height: 36px;
   display: flex;
   flex-wrap: nowrap;
+  align-items: flex-start;
   padding: $space-xs $space-sm;
   background: #ffffff;
   box-shadow: 0px 0px 20px 0px rgba(53, 73, 93, 0.2);
+  margin: 0 -$space-xss;
+  .item {
+    height: $height;
+    line-height: $height;
+    color: #9da4b3;
+    font-size: 20px;
+    margin: 0 $space-xss;
+  }
   .input {
     flex: 1;
     color: #0d0e15;
-    line-height: 20px;
+    line-height: $height - $space-xs * 2;
+    max-height: 100px;
+    overflow: auto;
     font-size: 14px;
     border-radius: $uni-border-radius-lg;
     background: #f3f4f6;
     padding: $space-xs;
-    margin-right: $space-sm;
     .uni-textarea-textarea {
       height: 100%;
+    }
+  }
+  .send-more {
+    position: relative;
+    width: 16px;
+    & > view {
+      position: absolute;
+      left: 0;
+      top: 0;
     }
   }
 }

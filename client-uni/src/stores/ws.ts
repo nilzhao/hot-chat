@@ -92,7 +92,14 @@ const useWsStore = defineStore('ws', () => {
     });
   };
 
-  return { init, newMsg, sendText, isConnected, status };
+  const sendImg = (data: Partial<Message>) => {
+    send({
+      ...data,
+      media: MessageMediaEnum.IMG,
+    });
+  };
+
+  return { init, newMsg, sendText, sendImg, isConnected, status };
 });
 
 export default useWsStore;

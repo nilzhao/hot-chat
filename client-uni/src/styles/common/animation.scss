@@ -1,0 +1,19 @@
+.transition {
+  transition: all 0.3s ease-in-out;
+}
+
+.transition-fast {
+  transition: all 0.1s ease-in-out;
+}
+
+.fade {
+  opacity: 0;
+}
+
+.slide-left {
+  transform: translate(-100%, 0);
+}
+
+.slide-right {
+  transform: translate(100%, 0);
+}

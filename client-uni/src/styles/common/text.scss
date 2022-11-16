@@ -4,12 +4,24 @@
   }
 }
 
-@each $size in 12, 14, 16, 18, 34 {
+@each $size in 12, 14, 16, 18, 20, 34 {
   .f-#{$size} {
-    font-size: $size * 1px;
+    font-size: $size * 1px !important;
   }
 }
 
 .text-white {
   color: $uni-text-color-inverse;
+}
+
+.text-primary {
+  color: $uni-color-primary;
+}
+
+.text-warning {
+  color: $uni-color-warning;
+}
+
+.text-error {
+  color: $uni-color-error;
 }

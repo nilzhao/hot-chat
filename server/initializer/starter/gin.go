@@ -25,6 +25,7 @@ func (s *GinStarter) Init() {
 func (s *GinStarter) Setup() {
 	// 注册路由
 	api := s.engine.Group("/api/v1")
+	api.Static("/static", "./static")
 	controller.NewAuthController().RegisterRoute(api)
 	api.Use(middleware.Auth())
 	controller.NewUserController().RegisterRoute(api)
@@ -33,6 +34,7 @@ func (s *GinStarter) Setup() {
 	controller.NewEnvelopeGoodsItemController().RegisterRoute(api)
 	controller.NewContactController().RegisterRoute(api)
 	controller.NewChatController().RegisterRoute(api)
+	controller.NewAttachController().RegisterRoute(api)
 }
 
 func (s *GinStarter) Start() {

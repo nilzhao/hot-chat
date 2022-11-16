@@ -1,5 +1,5 @@
 import { CHAT_MESSAGE_LIMIT } from '@/config';
-import { Chat, Message, MessageCmdEnum } from '@/types/chat';
+import { Chat, Message, MessageCmdEnum, MessageMediaEnum } from '@/types/chat';
 import { ContactDetail } from '@/types/contact';
 import { User } from '@/types/user';
 import { getLocalIItem, setLocalItem } from './storage';
@@ -44,6 +44,17 @@ class CacheChat {
     await setLocalItem(key, newList.slice(-CHAT_MESSAGE_LIMIT));
   };
 
+  getChatNote = (message: Message) => {
+    switch (message.media) {
+      case MessageMediaEnum.IMG:
+        return '[图片]';
+      case MessageMediaEnum.VIDEO:
+        return '[视频]';
+      default:
+        return message.content;
+    }
+  };
+
   refreshChatList = async (message: Message) => {
     const cachedList = await this.getChatList();
     const targetId = this.getTargetId(message.userId, message.targetId);
@@ -51,7 +62,7 @@ class CacheChat {
     if (!targetUser) return [];
 
     const newChat: Chat = {
-      note: message.content,
+      note: this.getChatNote(message),
       updatedAt: message.createdAt,
       avatar: targetUser.avatar,
       name: targetUser.name,
