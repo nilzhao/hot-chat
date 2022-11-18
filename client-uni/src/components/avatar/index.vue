@@ -50,14 +50,26 @@ const draw = (text?: string): string => {
 </script>
 
 <template>
-  <view :style="style" :class="[props.className, 'avatar']">
+  <view
+    :style="style"
+    :class="[
+      props.className,
+      'avatar',
+      {
+        round: props.round,
+      },
+    ]"
+  >
     <image :style="style" :src="props.src || draw(props.text)" />
   </view>
 </template>
 
 <style lang="scss" scoped>
 .avatar {
-  border-radius: 100%;
   overflow: hidden;
+  border-radius: $uni-border-radius-base;
+  &.round {
+    border-radius: 100%;
+  }
 }
 </style>

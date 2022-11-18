@@ -3,12 +3,19 @@ export enum UserStatusEnum {
   DISABLED,
 }
 
+export enum UserGenderEnum {
+  UNKNOWN = 0,
+  MALE,
+  FEMALE,
+}
+
 export interface User {
   id: number;
   status: UserStatusEnum;
   email: string;
   name: string;
   avatar: string;
+  gender: UserGenderEnum;
 }
 
 export const INIT_USER: User = {
@@ -17,4 +24,5 @@ export const INIT_USER: User = {
   email: '',
   name: '',
   avatar: '',
+  gender: UserGenderEnum.UNKNOWN,
 };

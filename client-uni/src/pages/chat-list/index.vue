@@ -6,10 +6,10 @@ import CacheChat from '@/utils/cache-chat';
 import { onMounted, ref, watch } from 'vue';
 import { formatDateTime } from '@/utils/time';
 import useWsStore from '@/stores/ws';
+import HomeNavbar from '@/components/home-navbar/index.vue';
 
 const chatList = ref<Chat[]>([]);
 const wsStore = useWsStore();
-
 const authStore = useAuthStore();
 const contactStore = useContactStore();
 
@@ -31,22 +31,27 @@ watch(
 );
 </script>
 <template>
-  <uni-list>
-    <template v-for="chat in chatList" :key="chat.targetId">
-      <uni-list-chat
-        link
-        clickable
-        :to="`/pages/chat/index?targetInfo=${JSON.stringify({
-          name: chat.name,
-          avatar: chat.avatar,
-          id: chat.targetId,
-        })}`"
-        :avatar-circle="true"
-        :title="chat.name"
-        :avatar="chat.avatar"
-        :note="chat.note"
-        :time="formatDateTime(chat.updatedAt)"
-      />
-    </template>
-  </uni-list>
+  <view>
+    <HomeNavbar />
+    <uni-list>
+      <template v-for="chat in chatList" :key="chat.targetId">
+        <uni-list-chat
+          link
+          clickable
+          :to="`/pages/chat/index?targetInfo=${JSON.stringify({
+            name: chat.name,
+            avatar: chat.avatar,
+            id: chat.targetId,
+          })}`"
+          :avatar-circle="true"
+          :title="chat.name"
+          :avatar="chat.avatar"
+          :note="chat.note"
+          :time="formatDateTime(chat.updatedAt)"
+        />
+      </template>
+    </uni-list>
+  </view>
 </template>
+
+<style lang="scss" scoped></style>

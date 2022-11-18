@@ -11,7 +11,7 @@
   @each $directionName, $directionValue in (t, top), (r, right), (b, bottom),
     (l, left)
   {
-    @each $type, $typeValue in (m, margin), (p, padding) {
+    @each $type, $typeValue in ((m, margin), (p, padding)) {
       .#{$type}#{$directionName}-#{$name} {
         #{$typeValue}-#{$directionValue}: $value !important;
       }

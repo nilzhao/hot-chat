@@ -24,6 +24,7 @@ specifiers:
   classnames: ^2.3.1
   lint-staged: ^13.0.3
   lodash: ^4.17.21
+  path-to-regexp: ^6.2.1
   pinia: ^2.0.16
   pinyin-pro: ^3.11.0
   prettier: ^2.7.1
@@ -50,6 +51,7 @@ dependencies:
   '@dcloudio/uni-ui': 1.4.20
   classnames: 2.3.1
   lodash: 4.17.21
+  path-to-regexp: 6.2.1
   pinia: 2.0.17_j6bzmzd4ujpabbp5objtwxyjp4
   pinyin-pro: 3.11.0
   vue: 3.2.37
@@ -2337,6 +2339,10 @@ packages:
   /path-to-regexp/0.1.7:
     resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
     dev: true
+
+  /path-to-regexp/6.2.1:
+    resolution: {integrity: sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==}
+    dev: false
 
   /picocolors/1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}

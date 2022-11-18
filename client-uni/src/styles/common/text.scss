@@ -10,6 +10,10 @@
   }
 }
 
+.f-bold {
+  font-weight: bold !important;
+}
+
 .text-white {
   color: $uni-text-color-inverse;
 }
@@ -24,4 +28,24 @@
 
 .text-error {
   color: $uni-color-error;
+}
+
+.text-grey {
+  color: #6d788e;
+}
+
+.text-grey-md {
+  color: #9da4b3;
+}
+
+.text-grey-md {
+  color: #9da4b3;
+}
+
+.text-grey-light {
+  color: #e0e2e7;
+}
+
+.text-grey-lightest {
+  color: #f3f4f6;
 }

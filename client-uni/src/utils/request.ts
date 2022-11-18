@@ -1,4 +1,5 @@
 import { API_BASE_URL, STORAGE_KEYS } from '@/config';
+import { compileUrl } from './index';
 
 type BaseRequestOptions = Omit<
   UniApp.RequestOptions,
@@ -22,23 +23,23 @@ interface Request {
   <T = any>(options: RequestOptions): Promise<RequestResult<T>>;
   get<T = any>(
     url: string,
-    options?: BaseRequestOptions
+    options?: RequestOptions
   ): Promise<RequestResult<T>>;
   post<T = any>(
     url: string,
-    options?: BaseRequestOptions
+    options?: RequestOptions
   ): Promise<RequestResult<T>>;
   put<T = any>(
     url: string,
-    options?: BaseRequestOptions
+    options?: RequestOptions
   ): Promise<RequestResult<T>>;
   delete<T = any>(
     url: string,
-    options?: BaseRequestOptions
+    options?: RequestOptions
   ): Promise<RequestResult<T>>;
 }
 
-async function request(options: UniApp.RequestOptions) {
+async function request(options: UniApp.RequestOptions & RequestOptions) {
   const method =
     options.method?.toLocaleUpperCase() as UniApp.RequestOptions['method'];
   const result: RequestResult<any> = {
@@ -47,7 +48,10 @@ async function request(options: UniApp.RequestOptions) {
     msg: '',
     data: null,
   };
-  const url = `${API_BASE_URL}${options.url}`;
+  let url = `${API_BASE_URL}${options.url}`;
+  if (options.routeParams) {
+    url = compileUrl(url, options.routeParams);
+  }
 
   const header = {
     ...options.header,

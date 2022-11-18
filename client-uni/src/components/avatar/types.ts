@@ -3,4 +3,5 @@ export interface AvatarProps {
   width?: number;
   src?: string;
   text?: string;
+  round?: boolean;
 }

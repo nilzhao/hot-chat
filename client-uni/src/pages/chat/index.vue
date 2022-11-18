@@ -24,14 +24,14 @@ const content = ref('');
 const targetInfo = ref<User | null>(null);
 const scrollTop = ref(0);
 
-onLoad((option) => {
+onLoad((query) => {
   const redirectToHome = () => {
     uni.switchTab({
       url: '/pages/index/index',
     });
   };
   try {
-    const targetParam = JSON.parse(decodeURIComponent(option.targetInfo || ''));
+    const targetParam = JSON.parse(decodeURIComponent(query.targetInfo || ''));
     if (!targetParam) {
       redirectToHome();
       return;
@@ -156,6 +156,7 @@ const handleAttachmentClick = () => {
               <view class="message-container">
                 <view class="message-avatar">
                   <Avatar
+                    round
                     :width="40"
                     text="她"
                     :src="

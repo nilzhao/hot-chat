@@ -52,6 +52,12 @@
         "navigationBarTitleText": "聊天窗口",
         "titleNView": false
       }
+    },
+    {
+      "path": "pages/search/index"
+    },
+    {
+      "path": "pages/user/info/index"
     }
   ],
   "tabBar": {
@@ -81,6 +87,7 @@
     ]
   },
   "globalStyle": {
+    "navigationStyle": "custom",
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "GROW",
     "navigationBarBackgroundColor": "#F8F8F8",

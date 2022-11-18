@@ -1,16 +1,32 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3537314 */
-  src: url('//at.alicdn.com/t/c/font_3537314_s0dutzxrjqc.woff2?t=1668330678243') format('woff2'),
-       url('//at.alicdn.com/t/c/font_3537314_s0dutzxrjqc.woff?t=1668330678243') format('woff'),
-       url('//at.alicdn.com/t/c/font_3537314_s0dutzxrjqc.ttf?t=1668330678243') format('truetype');
+  src: url('//at.alicdn.com/t/c/font_3537314_ryvj1jfun.woff2?t=1668767074246') format('woff2'),
+       url('//at.alicdn.com/t/c/font_3537314_ryvj1jfun.woff?t=1668767074246') format('woff'),
+       url('//at.alicdn.com/t/c/font_3537314_ryvj1jfun.ttf?t=1668767074246') format('truetype');
 }
 
 .iconfont {
   font-family: "iconfont" !important;
-  font-size: 16px;
+  font-size: inherit;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-female:before {
+  content: "\e71a";
+}
+
+.icon-male:before {
+  content: "\e71c";
+}
+
+.icon-scan:before {
+  content: "\e8b5";
+}
+
+.icon-add-friend:before {
+  content: "\e672";
 }
 
 .icon-voice:before {

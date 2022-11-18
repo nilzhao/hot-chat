@@ -13,6 +13,7 @@
           mode="aspectFit"
         />
         <Avatar
+          round
           :src="goods!.user!.avatar"
           :text="goods!.user!.name"
           :width="80"

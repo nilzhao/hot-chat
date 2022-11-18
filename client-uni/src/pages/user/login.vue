@@ -126,7 +126,6 @@ const register = async () => {
     <uni-popup ref="failMessageRef" :type="info.type" :mask-click="false">
       <uni-popup-message type="error" :message="info.msg" :duration="2000" />
     </uni-popup>
-    <view class="test"> </view>
   </view>
 </template>
 
@@ -145,18 +144,5 @@ const register = async () => {
 .tip {
   position: absolute;
   bottom: 66px;
-}
-.test {
-  width: 750px;
-  height: 120px;
-  border: 4px solid;
-  border-image: linear-gradient(
-      90deg,
-      rgba(255, 149, 9, 0),
-      rgba(254, 32, 66, 0.81),
-      rgba(255, 149, 9, 1),
-      rgba(255, 149, 9, 0)
-    )
-    4 4;
 }
 </style>

@@ -22,7 +22,7 @@ func NewContactController() Controller {
 func (c *ContactController) AddFriend(ctx *gin.Context) {
 	err := global.DB.Transaction(func(tx *gorm.DB) (err error) {
 		contactService := service.NewContactService(tx, ctx)
-		friendId, err := strconv.ParseInt(ctx.Param("friendId"), 10, 64)
+		friendId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			return errors.New("用户 ID 格式错误")
 		}
@@ -39,7 +39,7 @@ func (c *ContactController) AddFriend(ctx *gin.Context) {
 // 加入群聊
 func (c *ContactController) JoinCommunity(ctx *gin.Context) {
 	contactService := service.NewContactService(global.DB, ctx)
-	communityId, err := strconv.ParseInt(ctx.Param("communityId"), 10, 64)
+	communityId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 	if err != nil {
 		utils.ResFailed(ctx, errors.New("群组 ID 格式错误"))
 		return
@@ -60,7 +60,7 @@ func (c *ContactController) MyContacts(ctx *gin.Context) {
 }
 
 func (c *ContactController) RegisterRoute(api *gin.RouterGroup) {
-	api.POST("/contact/friends/:friendId", c.AddFriend)
-	api.POST("/contact/communities/:communityId", c.JoinCommunity)
+	api.POST("/contact/friends/:id", c.AddFriend)
+	api.POST("/contact/communities/:id", c.JoinCommunity)
 	api.GET("/contacts/me", c.MyContacts)
 }

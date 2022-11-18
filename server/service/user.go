@@ -36,7 +36,7 @@ func (s *UserService) Search(keyword string) model.Users {
 	if keyword == "" {
 		return users
 	}
-	result := s.db.Where("nick_name LIKE ? OR email = ?", keyword, keyword).Limit(10).Find(&users)
+	result := s.db.Where("nick_name = ? OR email = ?", keyword, keyword).Limit(10).Find(&users)
 	if result.Error != nil {
 		global.Logger.Error(result.Error)
 	}

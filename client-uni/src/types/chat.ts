@@ -3,6 +3,7 @@ export enum MessageCmdEnum {
   SINGLE,
   ROOM,
 }
+
 export enum MessageMediaEnum {
   TEXT = 0,
   NEWS,
