@@ -2,9 +2,9 @@ package starter
 
 import (
 	"fmt"
-	"red-server/controller"
-	"red-server/global"
-	"red-server/middleware"
+	"hot-chat/controller"
+	"hot-chat/global"
+	"hot-chat/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -39,7 +39,7 @@ func (s *GinStarter) Setup() {
 
 func (s *GinStarter) Start() {
 	global.Logger.Info("启动 gin...")
-	config := global.CONFIG.System
+	config := global.Config.System
 
 	addr := fmt.Sprintf("%s:%d", config.Host, config.Port)
 	global.Logger.Infof("Start server on: %s", addr)

@@ -3,9 +3,9 @@ package starter
 import (
 	"flag"
 	"fmt"
+	"hot-chat/config"
+	"hot-chat/global"
 	"os"
-	"red-server/config"
-	"red-server/global"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/gin-gonic/gin"
@@ -23,42 +23,44 @@ func (s *ConfigStarter) Name() string {
 }
 
 func (s *ConfigStarter) Init() {
-	configPath := getConfig()
+	env := getEnv()
+	if env == config.ENV_PROD {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	configPath := getConfig(env)
 	parseConfig(configPath)
 }
 
-func getConfig() (configPath string) {
-	flag.StringVar(&configPath, "c", "", "choose config file.")
+func getEnv() (env config.Env) {
+	// 从命令行中获取 env
+	flag.StringVar(&env, "e", "", "设置运行环境,可选: dev、prod")
 	flag.Parse()
-	if configPath == "" { // 判断命令行参数是否为空
-		if configEnv := os.Getenv(config.Env); configEnv == "" { // 判断 config.Env 常量存储的环境变量是否为空
-			switch gin.Mode() {
-			case gin.DebugMode:
-				configPath = config.DevFile
-				fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.EnvGinMode, config.DevFile)
-			case gin.ReleaseMode:
-				configPath = config.ProdFile
-				fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.EnvGinMode, config.ProdFile)
-			case gin.TestMode:
-				configPath = config.DevFile
-				fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.EnvGinMode, config.DevFile)
-			}
-		} else { // config.Env 常量存储的环境变量不为空 将值赋值于config
-			configPath = configEnv
-			fmt.Printf("您正在使用%s环境变量,config的路径为%s\n", config.Env, configPath)
-		}
-	} else { // 命令行参数不为空 将值赋值于 configPath
-		fmt.Printf("您正在使用命令行的-c参数传递的值,config的路径为%s\n", configPath)
+	// 从 环境变量中获取 env
+	if env == "" {
+		env = os.Getenv(config.ENV_OPTION)
 	}
-	return configPath
+	// 默认 env
+	if env == "" {
+		env = config.ENV_DEV
+	}
+	return env
+}
+
+func getConfig(env config.Env) (configPath string) {
+	return fmt.Sprintf("config.%s.yaml", env)
 }
 
 func parseConfig(configPath string) {
 	v := viper.New()
-	fmt.Printf("配置文件地址 %s\n", filepath.Join("config/yaml", configPath))
-	v.SetConfigFile(filepath.Join("config/yaml", configPath))
+	configPath, err := filepath.Abs(filepath.Join("config/yaml", configPath))
+	if err != nil {
+		panic(fmt.Errorf("文件地址错误: %s", err))
+	}
+	fmt.Println("abs configPath", configPath)
+	fmt.Printf("配置文件地址 %s\n", configPath)
+	v.SetConfigFile(configPath)
 	v.SetConfigType("yaml")
-	err := v.ReadInConfig()
+	err = v.ReadInConfig()
 	if err != nil {
 		panic(fmt.Errorf("配置文件解析错误: %s", err))
 	}
@@ -67,12 +69,12 @@ func parseConfig(configPath string) {
 
 	v.OnConfigChange(func(e fsnotify.Event) {
 		fmt.Println("config file changed:", e.Name)
-		if err = v.Unmarshal(&global.CONFIG); err != nil {
+		if err = v.Unmarshal(&global.Config); err != nil {
 			fmt.Println(err)
 		}
 	})
 
-	if err = v.Unmarshal(&global.CONFIG); err != nil {
+	if err = v.Unmarshal(&global.Config); err != nil {
 		fmt.Println(err)
 	}
 }

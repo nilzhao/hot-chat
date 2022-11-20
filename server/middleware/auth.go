@@ -3,13 +3,14 @@ package middleware
 
 import (
 	"errors"
-	"red-server/utils"
+	"hot-chat/global"
+	"hot-chat/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 func getToken(ctx *gin.Context) string {
-	const tokenKey = "X-Token"
+	tokenKey := global.Config.Jwt.TokenKey
 	token := ctx.Request.Header.Get(tokenKey)
 	if token == "" {
 		token = ctx.Query(tokenKey)

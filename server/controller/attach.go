@@ -1,10 +1,11 @@
 package controller
 
 import (
+	"hot-chat/global"
+	"hot-chat/utils"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"red-server/utils"
 	"strconv"
 	"time"
 
@@ -31,7 +32,7 @@ func (c *AttachController) Upload(ctx *gin.Context) {
 	}
 	// 按照时间创建文件夹
 	now := time.Now()
-	dstDir := filepath.Join("./static", strconv.Itoa(now.Year()), strconv.Itoa(int(now.Month())), strconv.Itoa(now.Day()))
+	dstDir := filepath.Join(global.Config.Attach.Dir, strconv.Itoa(now.Year()), strconv.Itoa(int(now.Month())), strconv.Itoa(now.Day()))
 	err = os.MkdirAll(dstDir, os.ModePerm)
 	if err != nil && !os.IsExist(err) {
 		utils.ResFailed(ctx, err)

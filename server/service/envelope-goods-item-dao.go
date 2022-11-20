@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"red-server/global"
-	"red-server/model"
+	"hot-chat/global"
+	"hot-chat/model"
 )
 
 func (s *EnvelopeGoodsItemService) Insert(item *model.EnvelopeGoodsItem) error {

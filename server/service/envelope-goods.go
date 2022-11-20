@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"fmt"
-	"red-server/global"
-	"red-server/model"
+	"hot-chat/global"
+	"hot-chat/model"
 	"time"
 
 	"github.com/segmentio/ksuid"
@@ -63,7 +63,7 @@ func (s *EnvelopeGoodsService) SendOut(goods *model.EnvelopeGoods) (*model.Envel
 	if body == nil {
 		return nil, fmt.Errorf("账户 %s 不存在", goods.AccountNo)
 	}
-	systemAccountNo := global.CONFIG.System.Account.AccountNo
+	systemAccountNo := global.Config.System.Account.AccountNo
 	target := accountService.GetOne(systemAccountNo)
 	if target == nil {
 		global.Logger.Error(fmt.Errorf("系统账户 %s 不存在", systemAccountNo))

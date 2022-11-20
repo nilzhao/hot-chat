@@ -2,10 +2,10 @@ package controller
 
 import (
 	"errors"
-	"red-server/global"
-	"red-server/model"
-	"red-server/service"
-	"red-server/utils"
+	"hot-chat/global"
+	"hot-chat/model"
+	"hot-chat/service"
+	"hot-chat/utils"
 
 	"github.com/gin-gonic/gin"
 )

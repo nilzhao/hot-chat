@@ -1,0 +1,46 @@
+
+# 开发环境
+system:
+  host: 0.0.0.0
+  port: 9000
+  name: 热聊
+  account:
+    userId: 1
+    userName: 系统红包账户
+    accountNo: system_red_envelope_account
+
+jwt:
+  # 秘钥
+  salt: 654321
+  # 存储在 request header 中的 key
+  tokenKey: X-Token
+  # 有效期 7 天
+  period: 604800
+
+db:
+  driverName: mysql
+  port: 26408
+  host: bj-cynosdbmysql-grp-1ni01vpy.sql.tencentcdb.com
+  database: hot-chat
+  user: server
+  password: 1tO&Q*2ERbvwLXbT
+  # 连接池配置
+  connMaxLifetime: 12h
+  maxIdleConns: 1
+  maxOpenConns: 3
+  loggingEnabled: false
+  # 数据源参数配置
+  options:
+    charset: utf8mb4
+    parseTime: true
+    loc: Local
+
+log:
+  dir: /qi/project/hot-chat/log/server
+  name: hot-chat.log
+  level: info
+  enableLineLog: true
+  localTime: true
+
+attach:
+  dir: /qi/project/hot-chat/attach

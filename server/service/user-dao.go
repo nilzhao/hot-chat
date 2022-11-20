@@ -1,8 +1,8 @@
 package service
 
 import (
-	"red-server/global"
-	"red-server/model"
+	"hot-chat/global"
+	"hot-chat/model"
 )
 
 var (

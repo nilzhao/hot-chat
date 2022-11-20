@@ -1,7 +1,7 @@
 package main
 
 import (
-	"red-server/initializer"
+	"hot-chat/initializer"
 )
 
 func main() {

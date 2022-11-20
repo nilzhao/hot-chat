@@ -1,0 +1,102 @@
+# 生产环境部署
+# 打包 服务端
+# 打包 客户端
+# 上传构件到远程服务器
+# 启动/重启远程服务
+
+name: Production Deploy
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  deploy-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: Build
+        run: |
+          cd server
+          go build -o ${{ github.ref_name }}/hot-chat-server
+          cp -r ./config ${{ github.ref_name }}/
+
+      - name: Upload
+        # You may pin to the exact commit or the version.
+        # uses: easingthemes/ssh-deploy@f2f261e6bd55fc750ceb9b0b7e49ad0ef72a7780
+        uses: easingthemes/ssh-deploy@v3.0.1
+        with:
+          # Private Key
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          # Remote host
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          # Remote user
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          # Source directory
+          SOURCE: server/${{ github.ref_name }}
+          # Target directory
+          TARGET: ${{ secrets.REMOTE_WORKSPACE }}/server/release/
+
+  deploy-client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.5.1
+        with:
+          # Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
+          node-version: 14.x
+
+      - name: Build
+        run: |
+          cd client-uni
+          npm install -g pnpm
+          pnpm install
+          pnpm build:h5 --outDir=dist/${{ github.ref_name }}
+
+      - name: Upload to release
+        uses: easingthemes/ssh-deploy@v3.0.1
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          SOURCE: client-uni/dist/${{ github.ref_name }}
+          TARGET: ${{ secrets.REMOTE_WORKSPACE }}/client/release/
+
+  deploy-run:
+    needs: [deploy-server, deploy-client]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Upload deploy
+        uses: easingthemes/ssh-deploy@v3.0.1
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          SOURCE: deploy
+          TARGET: ${{ secrets.REMOTE_WORKSPACE }}
+
+      - name: Run
+        # https://github.com/marketplace/actions/ssh-remote-commands
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          # ssh host
+          host: ${{ secrets.REMOTE_HOST }}
+          username:  ${{ secrets.REMOTE_USER }}
+          # content of ssh private key. ex raw content of ~/.ssh/id_rsa
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # execute commands
+          script: |
+            chmod +x ${{ secrets.REMOTE_WORKSPACE }}/deploy/**/*
+            cd ${{ secrets.REMOTE_WORKSPACE }}/deploy/script
+            ./run.sh -w ${{ secrets.REMOTE_WORKSPACE }} -v ${{ github.ref_name }}

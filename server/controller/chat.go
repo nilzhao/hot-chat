@@ -3,9 +3,9 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"hot-chat/global"
+	"hot-chat/utils"
 	"net/http"
-	"red-server/global"
-	"red-server/utils"
 	"sync"
 	"time"
 

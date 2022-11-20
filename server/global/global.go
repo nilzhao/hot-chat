@@ -1,7 +1,7 @@
 package global
 
 import (
-	"red-server/config"
+	"hot-chat/config"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -9,6 +9,6 @@ import (
 
 var (
 	DB     *gorm.DB
-	CONFIG config.Config
+	Config config.Config
 	Logger *logrus.Logger
 )

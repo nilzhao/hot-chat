@@ -2,9 +2,9 @@ package controller
 
 import (
 	"errors"
-	"red-server/global"
-	"red-server/service"
-	"red-server/utils"
+	"hot-chat/global"
+	"hot-chat/service"
+	"hot-chat/utils"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

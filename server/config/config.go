@@ -1,11 +1,14 @@
 package config
 
 const (
-	Env         = "CONFIG"
-	DefaultFile = "config.yaml"
-	DevFile     = "config.dev.yaml"
-	TestFile    = "config.test.yaml"
-	ProdFile    = "config.prod.yaml"
+	ENV_OPTION = "ENV"
+)
+
+type Env = string
+
+const (
+	ENV_DEV  Env = "dev"
+	ENV_PROD Env = "prod"
 )
 
 type Config struct {
@@ -13,4 +16,5 @@ type Config struct {
 	DB     DBConfig     `json:"db" yaml:"db"`
 	Log    LogConfig    `json:"log" yaml:"log"`
 	Jwt    Jwt          `json:"jwt" yaml:"jwt"`
+	Attach Attach       `json:"attach" yaml:"attach"`
 }

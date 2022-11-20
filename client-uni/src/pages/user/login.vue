@@ -39,13 +39,16 @@ const reset = () => {
 watch(mode, reset);
 
 const login = async () => {
+  uni.showLoading({
+    title: '登录中...',
+  });
   const { ok, data, msg } = await request.post('/login', {
     data: formData.value,
   });
   if (ok) {
     uni.setStorageSync(STORAGE_KEYS.token, data.token);
     await getCurrentUser();
-    uni.reLaunch({ url: '/pages/index/index' });
+    uni.reLaunch({ url: '/pages/chat-list/index' });
   } else {
     info.value = {
       msg,
@@ -53,6 +56,7 @@ const login = async () => {
     };
     failMessageRef.value!.open();
   }
+  uni.hideLoading();
 };
 
 const register = async () => {

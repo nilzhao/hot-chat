@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"red-server/global"
-	"red-server/model"
-	"red-server/utils"
+	"hot-chat/global"
+	"hot-chat/model"
+	"hot-chat/utils"
 
 	"github.com/segmentio/ksuid"
 	"github.com/shopspring/decimal"
@@ -93,7 +93,7 @@ func (s *EnvelopeGoodsItemService) getNextAmount(goods *model.EnvelopeGoods) dec
 }
 
 func (s *EnvelopeGoodsItemService) transfer(dto *model.RedEnvelopeReceiveDTO, amount decimal.Decimal) error {
-	systemAccount := global.CONFIG.System.Account
+	systemAccount := global.Config.System.Account
 	body := model.Account{
 		AccountNo: systemAccount.AccountNo,
 		UserId:    systemAccount.UserId,

@@ -2,7 +2,7 @@ package service
 
 import (
 	"errors"
-	"red-server/model"
+	"hot-chat/model"
 )
 
 func (s *AccountLogService) Insert(accountLog *model.AccountLog) error {

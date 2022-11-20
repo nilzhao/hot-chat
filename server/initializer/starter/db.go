@@ -1,9 +1,9 @@
 package starter
 
 import (
+	"hot-chat/global"
 	"log"
 	"os"
-	"red-server/global"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -37,10 +37,9 @@ func (s *DBStarter) Init() {
 	})
 	config.Logger = defaultLogger
 	s.gormConfig = config
-	dsn := global.CONFIG.DB.Dsn()
-
+	dsn := global.Config.DB.Dsn()
 	mysqlConfig := mysql.Config{
-		DriverName:                global.CONFIG.DB.DriverName,
+		DriverName:                global.Config.DB.DriverName,
 		DSN:                       dsn,   // DSN data source name
 		DefaultStringSize:         191,   // string 类型字段的默认长度
 		SkipInitializeWithVersion: false, // 根据版本自动配置
@@ -55,8 +54,8 @@ func (s *DBStarter) Start() {
 		panic(err)
 	} else {
 		sqlDB, _ := db.DB()
-		sqlDB.SetMaxIdleConns(global.CONFIG.DB.MaxIdleConns)
-		sqlDB.SetMaxOpenConns(global.CONFIG.DB.MaxOpenConns)
+		sqlDB.SetMaxIdleConns(global.Config.DB.MaxIdleConns)
+		sqlDB.SetMaxOpenConns(global.Config.DB.MaxOpenConns)
 	}
 	global.DB = db
 }

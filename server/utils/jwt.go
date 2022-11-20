@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"red-server/global"
-	"red-server/model"
+	"hot-chat/global"
+	"hot-chat/model"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -23,8 +23,8 @@ func createClaims(baseClaims BaseClaims) CustomClaims {
 		BaseClaims: baseClaims,
 		RegisteredClaims: jwt.RegisteredClaims{
 			NotBefore: jwt.NewNumericDate(time.Now().Add(time.Duration(-1000) * time.Second)),                    // 签名生效时间
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(global.CONFIG.Jwt.Period) * time.Second)), // 过期时间 7天  配置文件
-			Issuer:    global.CONFIG.Jwt.Issuer,                                                                  // 签名的发行者
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(global.Config.Jwt.Period) * time.Second)), // 过期时间 7天  配置文件
+			Issuer:    global.Config.Jwt.Issuer,                                                                  // 签名的发行者
 		},
 	}
 	return claims
@@ -33,7 +33,7 @@ func createClaims(baseClaims BaseClaims) CustomClaims {
 func CreateToken(baseClaims BaseClaims) (string, int64) {
 	claims := createClaims(baseClaims)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(global.CONFIG.Jwt.Salt)
+	tokenString, err := token.SignedString(global.Config.Jwt.Salt)
 	if err != nil {
 		global.Logger.Error(err)
 		return "", 0
@@ -43,7 +43,7 @@ func CreateToken(baseClaims BaseClaims) (string, int64) {
 
 func ParseToken(token string) (*CustomClaims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return global.CONFIG.Jwt.Salt, nil
+		return global.Config.Jwt.Salt, nil
 	})
 	if err != nil {
 		return nil, err

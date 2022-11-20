@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"red-server/model"
+	"hot-chat/model"
 
 	"github.com/gin-gonic/gin"
 )

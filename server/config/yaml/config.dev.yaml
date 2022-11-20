@@ -2,7 +2,7 @@
 system:
   host: 0.0.0.0
   port: 9000
-  name: 抢红包系统
+  name: 热聊
   account:
     userId: 1
     userName: 系统红包账户
@@ -12,7 +12,7 @@ jwt:
   # 秘钥
   salt: 123456
   # 存储在 request header 中的 key
-  key: X-Token
+  tokenKey: X-Token
   # 有效期 7 天
   period: 604800
 
@@ -20,7 +20,7 @@ db:
   driverName: mysql
   port: 3306
   host: 127.0.0.1
-  database: red
+  database: hot-chat
   user: root
   password: 123456
   # 连接池配置
@@ -30,13 +30,16 @@ db:
   loggingEnabled: false
   # 数据源参数配置
   options:
-    charset: utf8
+    charset: utf8mb4
     parseTime: true
     loc: Local
 
 log:
   dir: ./tmp/log/
-  name: red.log
+  name: hot-chat.log
   level: debug
   enableLineLog: true
   localTime: true
+
+attach:
+  dir: ./static
