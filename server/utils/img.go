@@ -7,14 +7,12 @@ import (
 	"image/gif"
 	"image/jpeg"
 	"image/png"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/kolesa-team/go-webp/encoder"
-	"github.com/kolesa-team/go-webp/webp"
+	"os/exec"
 )
 
 func GetFileMimeType(imgBuf []byte) (string, error) {
@@ -24,30 +22,30 @@ func GetFileMimeType(imgBuf []byte) (string, error) {
 	return mimeType, nil
 }
 
-func ConvertToWebp(imgPath string) (string, error) {
-	file, err := ioutil.ReadFile(imgPath)
+func ConvertToWebp(imgPath string) (webpPath string, err error) {
+	imgBuf, err := os.ReadFile(imgPath)
 	if err != nil {
-		return "", err
+		return
 	}
-	img, err := DecodeImage(file)
+	mimeType, err := GetFileMimeType(imgBuf)
 	if err != nil {
-		return "", err
+		return
 	}
-	newImgPath := strings.Replace(imgPath, filepath.Ext(imgPath), ".webp", 1)
-	output, err := os.Create(newImgPath)
-	if err != nil {
-		return "", err
+	webpLib := "cwebp"
+	if mimeType == "image/gif" {
+		webpLib = "gif2webp"
 	}
-	defer output.Close()
-	options, err := encoder.NewLossyEncoderOptions(encoder.PresetDefault, 75)
-	if err != nil {
-		return "", err
-	}
+	webpPath = strings.Replace(imgPath, filepath.Ext(imgPath), ".webp", 1)
+	cmd := exec.Command(webpLib, imgPath, "-o", webpPath)
 
-	if err := webp.Encode(output, img, options); err != nil {
-		return "", err
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
+	if err != nil {
+		return
 	}
-	return newImgPath, err
+	return
 }
 
 func DecodeImage(imgBuf []byte) (img image.Image, err error) {

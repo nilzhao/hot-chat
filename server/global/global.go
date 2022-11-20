@@ -1,7 +1,7 @@
 package global
 
 import (
-	"red-server/config"
+	"hot-chat/config"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"

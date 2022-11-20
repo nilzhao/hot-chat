@@ -30,7 +30,7 @@ func NewResponse(ctx *gin.Context, code ResCode, data interface{}, msg string) {
 	})
 }
 
-func ResOk(ctx *gin.Context, data any) {
+func ResOk(ctx *gin.Context, data interface{}) {
 	NewResponse(ctx, CODE_SUCCESS, data, "ok")
 }
 

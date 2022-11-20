@@ -2,7 +2,7 @@
 package starter
 
 import (
-	"red-server/global"
+	"hot-chat/global"
 
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"

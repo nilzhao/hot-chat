@@ -1,9 +1,9 @@
 package service
 
 import (
-	"red-server/global"
-	"red-server/model"
-	"red-server/utils"
+	"hot-chat/global"
+	"hot-chat/model"
+	"hot-chat/utils"
 
 	"gorm.io/gorm"
 )

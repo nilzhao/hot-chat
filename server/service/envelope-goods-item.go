@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"red-server/global"
-	"red-server/model"
-	"red-server/utils"
+	"hot-chat/global"
+	"hot-chat/model"
+	"hot-chat/utils"
 
 	"github.com/segmentio/ksuid"
 	"github.com/shopspring/decimal"

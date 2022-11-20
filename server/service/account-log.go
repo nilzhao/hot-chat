@@ -1,7 +1,7 @@
 package service
 
 import (
-	"red-server/model"
+	"hot-chat/model"
 
 	"github.com/segmentio/ksuid"
 	"github.com/shopspring/decimal"

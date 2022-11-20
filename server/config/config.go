@@ -1,7 +1,7 @@
 package config
 
 const (
-	Env         = "CONFIG"
+	Env         = "ENV"
 	DefaultFile = "config.yaml"
 	DevFile     = "config.dev.yaml"
 	TestFile    = "config.test.yaml"

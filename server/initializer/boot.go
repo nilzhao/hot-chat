@@ -1,11 +1,11 @@
 /*
-	管理 应用加载启动生命周期
+管理 应用加载启动生命周期
 */
 package initializer
 
 import (
 	"fmt"
-	starter "red-server/initializer/starter"
+	starter "hot-chat/initializer/starter"
 )
 
 type BootApplication struct {

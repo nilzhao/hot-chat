@@ -2,9 +2,9 @@ package starter
 
 import (
 	"fmt"
-	"red-server/controller"
-	"red-server/global"
-	"red-server/middleware"
+	"hot-chat/controller"
+	"hot-chat/global"
+	"hot-chat/middleware"
 
 	"github.com/gin-gonic/gin"
 )

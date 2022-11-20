@@ -3,15 +3,21 @@ package starter
 import (
 	"flag"
 	"fmt"
+	"hot-chat/config"
+	"hot-chat/global"
 	"os"
-	"red-server/config"
-	"red-server/global"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 
 	"path/filepath"
+)
+
+type Env = string
+
+const (
+	ENV_DEV  Env = "dev"
+	ENV_PROD Env = "prod"
 )
 
 type ConfigStarter struct {
@@ -27,29 +33,24 @@ func (s *ConfigStarter) Init() {
 	parseConfig(configPath)
 }
 
-func getConfig() (configPath string) {
-	flag.StringVar(&configPath, "c", "", "choose config file.")
+func getEnv() (env Env) {
+	// 从命令行中获取 env
+	flag.StringVar(&env, "env", "", "设置运行环境,可选: dev、prod")
 	flag.Parse()
-	if configPath == "" { // 判断命令行参数是否为空
-		if configEnv := os.Getenv(config.Env); configEnv == "" { // 判断 config.Env 常量存储的环境变量是否为空
-			switch gin.Mode() {
-			case gin.DebugMode:
-				configPath = config.DevFile
-				fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.EnvGinMode, config.DevFile)
-			case gin.ReleaseMode:
-				configPath = config.ProdFile
-				fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.EnvGinMode, config.ProdFile)
-			case gin.TestMode:
-				configPath = config.DevFile
-				fmt.Printf("您正在使用gin模式的%s环境名称,config的路径为%s\n", gin.EnvGinMode, config.DevFile)
-			}
-		} else { // config.Env 常量存储的环境变量不为空 将值赋值于config
-			configPath = configEnv
-			fmt.Printf("您正在使用%s环境变量,config的路径为%s\n", config.Env, configPath)
-		}
-	} else { // 命令行参数不为空 将值赋值于 configPath
-		fmt.Printf("您正在使用命令行的-c参数传递的值,config的路径为%s\n", configPath)
+	// 从 环境变量中获取 env
+	if env == "" {
+		env = os.Getenv(config.Env)
 	}
+	// 默认 env
+	if env == "" {
+		env = ENV_DEV
+	}
+	return env
+}
+
+func getConfig() (configPath string) {
+	env := getEnv()
+	configPath = fmt.Sprintf("config.%s.yaml", env)
 	return configPath
 }
 

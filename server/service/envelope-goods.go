@@ -3,8 +3,8 @@ package service
 import (
 	"errors"
 	"fmt"
-	"red-server/global"
-	"red-server/model"
+	"hot-chat/global"
+	"hot-chat/model"
 	"time"
 
 	"github.com/segmentio/ksuid"

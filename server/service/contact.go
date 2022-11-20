@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"red-server/model"
-	"red-server/utils"
+	"hot-chat/model"
+	"hot-chat/utils"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

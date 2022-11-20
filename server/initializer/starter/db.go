@@ -1,9 +1,10 @@
 package starter
 
 import (
+	"fmt"
+	"hot-chat/global"
 	"log"
 	"os"
-	"red-server/global"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -38,6 +39,7 @@ func (s *DBStarter) Init() {
 	config.Logger = defaultLogger
 	s.gormConfig = config
 	dsn := global.CONFIG.DB.Dsn()
+	fmt.Println(global.CONFIG.DB)
 
 	mysqlConfig := mysql.Config{
 		DriverName:                global.CONFIG.DB.DriverName,

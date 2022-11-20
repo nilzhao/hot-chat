@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"red-server/global"
-	"red-server/model"
+	"hot-chat/global"
+	"hot-chat/model"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"

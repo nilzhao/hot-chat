@@ -2,7 +2,7 @@ package utils
 
 import (
 	"errors"
-	"red-server/global"
+	"hot-chat/global"
 	"strings"
 	"sync"
 
